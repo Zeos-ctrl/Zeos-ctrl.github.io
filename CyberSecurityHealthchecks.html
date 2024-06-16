@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="services-styles.css">
+        <title>Cyber Security Health checks</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="background-wrapper">
+                <div class="background-pattern"></div>
+            </div>
+            <div class="page">
+                <div class="image-container">
+                    <img src="./assets/images/logoLarge.svg" />
+                </div>
+                <h1>Get an Overview of Your Business's Security</h1>
+
+                <p>At Zeos Systems, we offer a comprehensive vulnerability assessment designed to
+                identify and categorize risks present in your company's IT infrastructure. By
+                prioritizing these vulnerabilities based on their severity and potential impact,
+                companies can focus on addressing the most critical threats first, significantly
+                reducing their risk of data breaches and other security incidents. Additionally,
+                many industries are subject to regulations and standards that require regular
+                vulnerability assessments to maintain compliance.</p>
+
+                <p>Conducting these assessments regularly allows your organization to continuously
+                monitor and improve your security posture, providing valuable data for the development
+                of robust security policies and procedures. Organizations that actively manage
+                vulnerabilities can reduce the risk of cyberattacks by addressing known weaknesses
+                before they can be exploited. A report by EC-Council highlights that around 60%
+                of breaches are linked to unpatched vulnerabilities, underscoring the importance
+                of regular and thorough vulnerability assessments to mitigate these risks
+                <a href="https://www.eccouncil.org/cybersecurity-exchange/ethical-hacking/conduct-a-vulnerability-analysis/">(EC-Council)</a>.</p>
+
+                <h1>Receive a Comprehensive Report on Your Organization's Security</h1>
+
+                <p>After an assessment is conducted on your organization, you will receive a full report on the findings, which includes:</p>
+
+                <ul>
+                    <li>Executive Summary</li>
+                    <li>Overview of Assessment</li>
+                    <li>Scope and Duration</li>
+                    <li>Vulnerabilities and Recommendations</li>
+                </ul>
+
+                <h2>Executive Summary</h2>
+
+                <p>This section provides a high-level overview of the most important issues that
+                need to be addressed immediately. It allows you to understand your company's
+                security status at a glance with the help of graphs and graphics.</p>
+
+                <h2>Overview of Assessment</h2>
+
+                <p>This section gives you an insight into how the assessment was performed,
+                including the methodologies and tools used during the testing process.</p>
+
+                <h2>Scope and Duration</h2>
+
+                <p>This section details everything authorized for the assessment, including
+                the target scope and testing period.</p>
+
+                <h2>Vulnerabilities and Recommendations</h2>
+
+                <p>This section includes detailed findings from the assessment, after eliminating
+                any false positives through manual testing. The included information covers:</p>
+
+                <ul>
+                    <li>Vulnerability Name</li>
+                    <li>CVE (Common Vulnerabilities and Exposures)</li>
+                    <li>CVSS (Common Vulnerability Scoring System)</li>
+                    <li>Description</li>
+                    <li>References</li>
+                    <li>Remediation Steps</li>
+                    <li>Proof of Concept</li>
+                    <li>Affected System</li>
+                </ul>
+
+                <h1>Why Choose Us?</h1>
+
+                <p>At Zeos Systems, we use the latest tools and techniques to ensure a thorough
+                evaluation of your IT infrastructure. Our assessments not only help in compliance
+                with industry standards but also significantly reduce the risk of cyberattacks
+                by addressing vulnerabilities before they can be exploited.</p>
+
+                <p>By choosing our service, you are investing in the long-term security and
+                resilience of your organization. Our expertise ensures that your business
+                remains protected in an increasingly hostile cyber environment.</p>
+
+            </div>
+        </div>
+        <script>
+            function adjustBackgroundHeight() {
+                var page = document.querySelector('.page');
+                var backgroundWrapper = document.querySelector('.background-wrapper');
+                backgroundWrapper.style.height = page.offsetHeight + 'px';
+            }
+
+            window.addEventListener('load', adjustBackgroundHeight);
+            window.addEventListener('resize', adjustBackgroundHeight);
+        </script>
+    </body>
+</html>
