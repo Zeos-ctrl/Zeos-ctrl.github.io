@@ -14,13 +14,13 @@
 html, body {
     margin: 0;
     padding: 0;
-    font-family: "IBM Plex Sans", sans-serif;
+    font-family: "Cantarell", sans-serif;
 }
 
 h1 {
     font-size: 7em;
     font-weight: 700;
-    font-family: 'Eurostile';
+    font-family: "Cantarell", sans-serif;
     color: #333;
     margin: 0px;
     padding: 2px;
@@ -81,7 +81,7 @@ form {
     color: var(--light);
     padding: 10px;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 10px;
     line-height: 25px;
 }
 
@@ -146,7 +146,7 @@ form {
 .background-pattern {
       background-image: url(./assets/images/griddy.svg);
       background-color: var(--dark);
-      background-size: 10%;  
+      background-size: 8%;  
       position: absolute;
       left: 50%;
       top: 0px;
@@ -251,7 +251,8 @@ form {
     width: 40vw;
     height: 40vh;
     border: 2px solid var(--dark);
-    border-radius: 4px;
+    border-radius: 10px;
+    box-shadow: 10px 10px 0 0 var(--dark);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -264,10 +265,10 @@ form {
     position: relative;
     margin: 0;
     padding: 0;
+    justify-items: center;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 20px;
     border: 1px solid var(--dark);
     scroll-snap-align: start;
 }
@@ -279,24 +280,25 @@ form {
     flex-direction: column;
     padding-top: 10px;
     padding-bottom: 10px;
+    font-size: 1.1em;
 }
 
 .form-input input, .form-input textarea {
     border: 1px solid var(--dark);
-    border-radius: 5px;
+    border-radius: 10px;
     width: 100%;
-    padding: 5px;
+    padding: 10px;
 }
 
 .submit {
     width: 30%;
     height: 50px;
-    font-size: 1em;
+    font-size: 1.1em;
     font-weight: 500;
-    background-color: var(--highlight);
-    border-radius: 5px;
+    border-radius: 10px;
     border: none;
     color: white;
+    background-color: var(--highlight);
 }
 
 .submit:hover {

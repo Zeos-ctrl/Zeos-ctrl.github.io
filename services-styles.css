@@ -24,7 +24,7 @@ body {
     padding: 0;
 }
 .page {
-    font-family: Arial, sans-serif;
+    font-family: "Cantarell", sans-serif;
     line-height: 1.6;
     width: 80%;
     min-height: 100vh;
@@ -62,7 +62,7 @@ body {
 .background-pattern {
     background-image: url(./assets/images/griddy.svg);
     background-color: var(--dark);
-    background-size: 10%;
+    background-size: 8%;
     position: absolute;
     left: 50%;
     top: 0;
@@ -76,10 +76,12 @@ body {
 h1 {
     font-size: 2.5em;
     color: var(--light);
+    font-family: 'Eurostile';
 }
 h2 {
     font-size: 2em;
     color: var(--light);
+    font-family: 'Eurostile';
 }
 h3 {
     font-size: 1.5em;
@@ -89,10 +91,14 @@ ul {
     list-style-type: disc;
     margin-left: 20px;
     color: var(--light);
+    text-align: left;
+    font-size: 1.3em;
 }
 p {
     color: var(--light);
     margin-bottom: 10px;
+    text-align: left;
+    font-size: 1.3em;
 }
 a {
     color: var(--highlight);
