@@ -20,8 +20,7 @@ html, body {
 h1 {
     font-size: 7em;
     font-weight: 700;
-    font-family: "Cantarell", sans-serif;
-    color: #333;
+    color: var(--light);
     margin: 0px;
     padding: 2px;
     width: 30%;
@@ -30,7 +29,7 @@ h1 {
 h2 {
     font-size: 4em;
     font-weight: 500;
-    color: #333;
+    color: var(--light);
     margin: 20px;
     padding: 0;
     width: 30%;
@@ -96,7 +95,8 @@ form {
 @media only screen and (max-width: 900px) {
 
     .main-logo {
-        scale: 0.5;
+        width: 300px !important;
+        height: 200px !important;
     }
 
     .main {
@@ -117,6 +117,8 @@ form {
 
     footer {
         flex-direction: column;
+        gap: 20px;
+        padding: 20px;
     }
 
     form {
@@ -182,7 +184,7 @@ form {
 
 /* Home section text area and logo area */
 .main-logo {
-    width: 439px; height: 279px;
+    width: 570px; height: 362px;
 }
 
 .main {
