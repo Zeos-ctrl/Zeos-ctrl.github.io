@@ -15,12 +15,12 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: "Cantarell", sans-serif;
+    color: var(--light);
 }
 
 h1 {
     font-size: 7em;
     font-weight: 700;
-    color: var(--dark);
     margin: 0px;
     padding: 2px;
     width: 30%;
@@ -29,7 +29,6 @@ h1 {
 h2 {
     font-size: 4em;
     font-weight: 500;
-    color: var(--dark);
     margin: 20px;
     padding: 0;
     width: 30%;
@@ -59,8 +58,8 @@ footer {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    border: 1px solid var(--dark);
     scroll-snap-align: center;
+    background-color: var(--dark);
 }
 
 form {
@@ -85,10 +84,8 @@ form {
 }
 
 .redirect:hover {
-    border: 2px solid var(--highlight);
-    color: var(--highlight);
-    background: var(--light);
     box-shadow: 0px 0px 5px 5px var(--highlight);
+    color: var(--light);
 }
 
 /* I hate mobile phone web design */
@@ -265,8 +262,13 @@ form {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 40%;
     padding: 50px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-left: 10px;
+    color: var(--light);
+    border-radius: 10px;
 }
 
 .missionstatement h1 {
@@ -275,6 +277,8 @@ form {
     text-align: center;
     margin-bottom: 10px;
     text-decoration: underline;
+    font-weight: 400;
+    color: var(--light);
 }
 
 .missionvid {
@@ -292,8 +296,8 @@ form {
     margin: 40px;
     width: 40vw;
     height: 40vh;
-    border: 2px solid var(--dark);
     border-radius: 10px;
+    color: var(--light);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -310,7 +314,6 @@ form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    border: 1px solid var(--dark);
     scroll-snap-align: start;
 }
 
@@ -325,10 +328,14 @@ form {
 }
 
 .form-input input, .form-input textarea {
-    border: 1px solid var(--dark);
+    background-color: var(--dark);
+    color: var(--light);
     border-radius: 10px;
+    border: 3px solid var(--highlight);
     width: 100%;
     padding: 10px;
+    outline: none;
+    resize: none;
 }
 
 .submit {
@@ -366,6 +373,27 @@ form {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    border: 1px solid var(--dark);
     scroll-snap-align: start;
+}
+
+#background {
+    background: var(--dark);
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.orb {
+    position: absolute;
+    background: var(--highlight);
+    border-radius: 50%;
+    font-size: 250px;
+    height: 1em;
+    width: 1em;
+    filter: blur(32px);
+    z-index: -1;
 }
