@@ -89,7 +89,7 @@ form {
 }
 
 /* I hate mobile phone web design */
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1000px) {
 
     .main-logo {
         width: 300px !important;
@@ -98,16 +98,17 @@ form {
 
     .main {
         width: 80vw !important;
-        height: 80vh !important;
+        height: 70vh !important;
     }
 
     .section {
         flex-direction: column !important;
+        justify-content: center;
     }
     
     .missionstatement,
     .missionvid {
-        width: 100% !important;
+        width: 80% !important;
     }
 
     .missionstatement h1 {
@@ -129,7 +130,7 @@ form {
         flex-direction: column;
         gap: 20px;
         padding: 20px;
-        padding-bottom: 100px;
+        padding-bottom: 200px;
     }
 
     form {
@@ -144,6 +145,20 @@ form {
         scroll-snap-type: none !important;
     }
 
+}
+
+@media only screen and (max-height: 500px) {
+    .main-logo {
+       display: none; 
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 16px;
+    }
 }
 
 /* Background scrolling animation on main div */
@@ -209,8 +224,8 @@ form {
     padding: 10px;
     margin: 0px;
     border-radius: 10px;
-    width: 50vw;
-    height: 70vh;
+    width: 60vw;
+    height: 80vh;
     position: absolute;
     margin: auto;
     top: 0;
