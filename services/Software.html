@@ -18,6 +18,11 @@
     </head>
     <body>
         <div class="container">
+            <div class="topbar">
+                <a href="https://zeos.systems">Home</a>
+                <a href="https://zeos.systems/services/CyberSecurityHealthchecks.html">Cyber Security Healthchecks</a>
+                <a href="https://zeos.systems/services/SoftwareDev.html">Software</a>
+            </div>
             <div class="background-wrapper">
                 <div class="background-pattern"></div>
             </div>
@@ -53,15 +58,5 @@
                 </div>
 
             </div>
-            <script>
-                function adjustBackgroundHeight() {
-                    var page = document.querySelector('.page');
-                    var backgroundWrapper = document.querySelector('.background-wrapper');
-                    backgroundWrapper.style.height = page.offsetHeight + 'px';
-                }
-
-                window.addEventListener('load', adjustBackgroundHeight);
-                window.addEventListener('resize', adjustBackgroundHeight);
-            </script>
     </body>
 </html>

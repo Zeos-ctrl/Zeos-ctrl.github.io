@@ -19,6 +19,11 @@
     </head>
     <body>
         <div class="container">
+            <div class="topbar">
+                <a href="https://zeos.systems">Home</a>
+                <a href="https://zeos.systems/services/CyberSecurityHealthchecks.html">Cyber Security Healthchecks</a>
+                <a href="https://zeos.systems/services/SoftwareDev.html">Software</a>
+            </div>
             <div class="background-wrapper">
                 <div class="background-pattern"></div>
             </div>
@@ -88,6 +93,36 @@
                     <li>Affected System</li>
                 </ul>
 
+                <h1>What Do We Scan and Check?</h1>
+                <p>For our vulnerability assessment, we typically scan a set of IP
+                addresses associated with the following devices:</p>
+                <ul>
+                    <li>Servers (Web, Database, Mail, File)</li>
+                    <li>Workstations and PCs</li>
+                    <li>Network Routers and Switches</li>
+                    <li>Firewalls</li>
+                    <li>Virtual Machines</li>
+                    <li>IoT Devices</li>
+                    <li>Development and Test Servers</li>
+                </ul>
+                <p>In addition to our vulnerability assessments, our cybersecurity
+                health checks include a comprehensive review of your internal security
+                policies, aligned with the UK Cyber Essentials scheme. We evaluate
+                and provide recommendations for:</p>
+                <ul>
+                    <li>Firewall Configuration and Management</li>
+                    <li>Password Policies and Enforcement</li>
+                    <li>Device Inventory and Management</li>
+                    <li>User Management and Access Control</li>
+                    <li>Patch Management and Software Updates</li>
+                    <li>Data Protection and Backup Strategies</li>
+                    <li>Incident Response Plans</li>
+                </ul>
+                <p>By combining thorough vulnerability scans with a detailed
+                policy review, we ensure that your organization is not only
+                protected from technical vulnerabilities but also adheres to
+                best practices in cybersecurity management.</p>
+
                 <h1>Why Choose Us?</h1>
 
                 <p>At Zeos Systems, we use the latest tools and techniques to ensure a thorough
@@ -99,17 +134,72 @@
                 resilience of your organization. Our expertise ensures that your business
                 remains protected in an increasingly hostile cyber environment.</p>
 
+                <h1>Pricing</h1>
+
+                <p>We offer two plans for Vulnerability Assessments tailored to
+                your company's needs. The first option is a one-time payment, ideal
+                for businesses that require a scan every six months or so. This is
+                a cost-effective solution designed for companies with less frequent
+                scanning needs. The second option is a monthly subscription, which
+                includes regular network scans to keep your company continuously
+                protected against the latest threats. The one-time payment starts
+                at £200, with the final cost depending on your company's size,
+                while the monthly subscription begins at £150, also adjusted based
+                on your company's size.</p>
+
+                <p>For our comprehensive Cyber Security Health Checks, we
+                follow a similar pricing structure. A one-time assessment
+                starts at £500, providing a thorough review of your security
+                posture. Alternatively, you can opt for a subscription starting 
+                at £400 per month, ensuring your company stays secure and up-to-date
+                well into the future.</p>
+
+                <h1>Get a Quote Today!</h1>
+
+                <p>Contact us today to get a free quote.</p>
+
+                <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <form action="https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26" method="post">
+                        <div class="form-input">
+                            <label for="firstname">First Name:</label>
+                            <input type="text" id="firstname" name="firstname" required>
+                        </div>
+                        <div class="form-input">
+                            <label for="companyname">Company Name:</label>
+                            <input type="text" id="companyname" name="companyname" required>
+                        </div>
+                        <div class="form-input">
+                            <label for="companysize">Company Size:</label>
+                            <select name="companysize" id="companysize">
+                                <option value="1-10">1-10</option>
+                                <option value="11-50">11-50</option>
+                                <option value="51-100">51-100</option>
+                                <option value="100+">100+</option>
+                            </select>
+                        </div>
+                        <div class="form-input">
+                            <label for="devices">Number of Services and Devices:</label>
+                            <select name="devices" id="devices">
+                                <option value="1-10">1-10</option>
+                                <option value="11-50">11-50</option>
+                                <option value="51-100">51-100</option>
+                                <option value="100+">100+</option>
+                            </select>
+                        </div>
+                        <div class="form-input">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-input">
+                            <label for="service">Service:</label>
+                            <select name="service" id="service">
+                                <option value="1-10">Vulnerability Scan</option>
+                            </select>
+                        </div>
+                        <input class="submit" type="submit" value="Submit">
+                    </form>
+                </div>
             </div>
         </div>
-        <script>
-            function adjustBackgroundHeight() {
-                var page = document.querySelector('.page');
-                var backgroundWrapper = document.querySelector('.background-wrapper');
-                backgroundWrapper.style.height = page.offsetHeight + 'px';
-            }
-
-            window.addEventListener('load', adjustBackgroundHeight);
-            window.addEventListener('resize', adjustBackgroundHeight);
-        </script>
     </body>
 </html>
