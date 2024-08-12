@@ -160,6 +160,10 @@ form {
     p {
         font-size: 16px;
     }
+
+    .topbar {
+        flex-direction: column !important;
+    }
 }
 
 /* Background scrolling animation on main div */
@@ -401,7 +405,7 @@ form {
 
 .topbar {
     width: 100%;
-    height: 7vh;
+    min-height: 7vh;
     background-color: var(--dark);
     display: flex;
     justify-content: space-evenly;
