@@ -234,6 +234,7 @@ form {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    gap: 10px;
 }
 
 .author > img {
