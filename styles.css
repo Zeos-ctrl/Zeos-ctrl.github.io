@@ -292,8 +292,7 @@ form {
     width: 100%;
     text-align: center;
     margin-bottom: 10px;
-    text-decoration: underline;
-    font-weight: 400;
+    font-weight: 600;
     color: var(--light);
 }
 
