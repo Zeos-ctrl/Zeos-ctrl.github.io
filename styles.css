@@ -101,6 +101,10 @@ form {
         height: 70vh !important;
     }
 
+    .topbar a {
+        margin: 5px !important;
+    }
+
     .section {
         flex-direction: column !important;
         justify-content: center;
