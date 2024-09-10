@@ -6,16 +6,16 @@
         <meta name="description" content="Vulnerability scanning for your small business in Cardiff. Get a quote to secure your business today.">
         <link rel="stylesheet" href="../services-styles.css">
         <link rel="icon" type="image/x-icon" href="https://zeos.systems/favicon.ico">
-        <title>Cyber Security Health checks</title>
-        
+        <title>Cyber Security</title>
+
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-55C2YD933N"></script>
         <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-          gtag('config', 'G-55C2YD933N');
+            gtag('config', 'G-55C2YD933N');
         </script>
     </head>
     <body>
@@ -136,78 +136,87 @@
                 resilience of your organization. Our expertise ensures that your business
                 remains protected in an increasingly hostile cyber environment.</p>
 
-                <h1>Pricing</h1>
-
-                <p>We offer two plans for Vulnerability Assessments tailored to
-                your company's needs. The first option is a one-time payment, ideal
-                for businesses that require a scan every six months or so. This is
-                a cost-effective solution designed for companies with less frequent
-                scanning needs. The second option is a monthly subscription, which
-                includes regular network scans to keep your company continuously
-                protected against the latest threats. The one-time payment starts
-                at £200, with the final cost depending on your company's size,
-                while the monthly subscription begins at £150, also adjusted based
-                on your company's size.</p>
-
-                <p>For our comprehensive Cyber Security Health Checks, we
-                follow a similar pricing structure. A one-time assessment
-                starts at £500, providing a thorough review of your security
-                posture. Alternatively, you can opt for a subscription starting 
-                at £400 per month, ensuring your company stays secure and up-to-date
-                well into the future.</p>
-
-                <h1>Get a Quote Today!</h1>
-
-                <p>Contact us today to get a free quote.</p>
-
             </div>
-            <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; position: relative;">
-                <form action="https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26" method="post">
-                    <div class="form-input">
-                        <label for="firstname">First Name:</label>
-                        <input type="text" id="firstname" name="firstname" required>
+            <div class="price-container">
+                <!-- Basic Plan -->
+                <div class="pricing-plan blur">
+                    <h2 class="plan-title">Web Defender</h2>
+                    <p class="price">£200 one-time<br>or £150/month</p>
+                    <ul class="features">
+                        <li>Comprehensive Website Security Audit</li>
+                        <li>Vulnerability scanning for web applications</li>
+                        <li>Detailed security report with recommendations</li>
+                        <li>Monthly updates and ongoing monitoring</li>
+                    </ul>
+                    <button class="select-plan" onclick="openModal('Web Defender')">Select Plan</button>
+                </div>
+
+                <!-- Standard Plan -->
+                <div class="pricing-plan blur">
+                    <h2 class="plan-title">Secure Server</h2>
+                    <p class="price">£450 one-time<br>or £350/month</p>
+                    <ul class="features">
+                        <li>Standalone Servers Vulnerability Analysis</li>
+                        <li>Policy review and recommendations</li>
+                        <li>Detailed vulnerability and policy report</li>
+                        <li>Periodic re-assessment and updates</li>
+                    </ul>
+                    <button class="select-plan" onclick="openModal('Secure Server')">Select Plan</button>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="pricing-plan blur">
+                    <h2 class="plan-title">Total Defence</h2>
+                    <p class="price">£600 one-time<br>or £500/month</p>
+                    <ul class="features">
+                        <li>Complete vulnerability assessment for all IT infrastructure</li>
+                        <li>Extensive policy review and recommendations based on the UK Cyber Essentials</li>
+                        <li>Unified security report with integrated data</li>
+                        <li>Continuous monitoring and periodic updates</li>
+                    </ul>
+                    <button class="select-plan" onclick="openModal('Total Defence')">Select Plan</button>
+                </div>
+                <!-- Modal for Contact Form -->
+                <div id="contactModal" class="modal blur">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <h2>Contact Us - <span id="planType"></span></h2>
+                        <form class="contact-form" action="https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26" method="post">
+                            <input type="hidden" id="planName" name="planName">
+                            <input type="text" id="name" placeholder="Your Name" required>
+                            <input type="email" id="email" placeholder="Your Email" required>
+                            <input type="text" id="company" placeholder="Your Company" required>
+                            <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+                            <button type="submit">Submit</button>
+                        </form>
                     </div>
-                    <div class="form-input">
-                        <label for="companyname">Company Name:</label>
-                        <input type="text" id="companyname" name="companyname" required>
-                    </div>
-                    <div class="form-input">
-                        <label for="companysize">Company Size:</label>
-                        <select name="companysize" id="companysize">
-                            <option value="1-10">1-10</option>
-                            <option value="11-50">11-50</option>
-                            <option value="51-100">51-100</option>
-                            <option value="100+">100+</option>
-                        </select>
-                    </div>
-                    <div class="form-input">
-                        <label for="devices">Number of Services and Devices:</label>
-                        <select name="devices" id="devices">
-                            <option value="1-10">1-10</option>
-                            <option value="11-50">11-50</option>
-                            <option value="51-100">51-100</option>
-                            <option value="100+">100+</option>
-                        </select>
-                    </div>
-                    <div class="form-input">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-input">
-                        <label for="service">Service:</label>
-                        <select name="service" id="service">
-                            <option value="Vulnerability Scan">Vulnerability Scan</option>
-                            <option value="Healthcheck">Full Healthcheck</option>
-                        </select>
-                    </div>
-                    <input class="submit" type="submit" value="Submit">
-                </form>
+                </div>
             </div>
-        </div>
-        <footer>
-            <p>Zeos.Systems 2024</p>
-            <a href="https://zeos.systems/policies/PrivacyPolicy.html" style="margin: 0px; width: auto;">Privacy Policy</a>
-            <a href="https://zeos.systems/policies/TOS.html" style="margin: 0px; width: auto;">Terms and Conditions</a>
-        </footer>
+            <footer>
+                <p>Zeos.Systems 2024</p>
+                <a href="https://zeos.systems/policies/PrivacyPolicy.html" style="margin: 0px; width: auto;">Privacy Policy</a>
+                <a href="https://zeos.systems/policies/TOS.html" style="margin: 0px; width: auto;">Terms and Conditions</a>
+            </footer>
+            <script>
+                // Open Modal and set the plan type
+                function openModal(planType) {
+                    document.getElementById("contactModal").style.display = "flex";
+                    document.getElementById("planType").textContent = planType;
+                    document.getElementById("planName").value = planType;
+                }
+
+                // Close Modal
+                function closeModal() {
+                    document.getElementById("contactModal").style.display = "none";
+                }
+
+                // Close modal if clicked outside content
+                window.onclick = function(event) {
+                    var modal = document.getElementById("contactModal");
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+            </script>
     </body>
 </html>

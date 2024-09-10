@@ -4,11 +4,26 @@
     --highlight: #00B48C;
 }
 
+@font-face {
+    font-family: 'Eurostile';
+    src: url('eurostile-webfont.woff2') format('woff2'),
+         url('eurostile-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 /* Base Styles */
 * {
     box-sizing: border-box;
     transition: all 0.4s;
     scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 html, body {
