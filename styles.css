@@ -112,12 +112,8 @@ form {
     }
 
     .main {
-        width: 80vw !important;
+        width: 90vw !important;
         height: 70vh !important;
-    }
-
-    .topbar a {
-        margin: 5px !important;
     }
 
     .section {
@@ -127,7 +123,7 @@ form {
     
     .missionstatement,
     .missionvid {
-        width: 80% !important;
+        width: 90vw !important;
     }
 
     .missionstatement h1 {
@@ -142,7 +138,7 @@ form {
     }
 
     .service {
-        width: 80vw !important;
+        width: 90vw !important;
         height: 70vh !important;
     }
 
@@ -167,6 +163,10 @@ form {
 
     .topbar {
         flex-direction: column !important;
+    }
+
+    .contact {
+        flex-direction: column !important; 
     }
 }
 
@@ -256,6 +256,7 @@ form {
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: 2;
 }
 
 .frosted {
@@ -315,7 +316,6 @@ form {
     width: 100%;
     text-align: center;
     margin-bottom: 10px;
-    font-weight: 600;
     color: var(--light);
 }
 
@@ -376,12 +376,13 @@ form {
 .form-input input, .form-input textarea {
     background-color: var(--dark);
     color: var(--light);
-    border-radius: 10px;
-    border: 3px solid var(--highlight);
+    border-radius: 1em;
+    border: 2px solid var(--light);
     width: 100%;
     padding: 10px;
     outline: none;
     resize: none;
+    font-family: "Cantarell", sans-serif;
 }
 
 .submit {
@@ -389,7 +390,7 @@ form {
     height: 50px;
     font-size: 1.1em;
     font-weight: 500;
-    border-radius: 10px;
+    border-radius: 1em;
     border: none;
     color: white;
     background-color: var(--highlight);
@@ -400,6 +401,15 @@ form {
     cursor: pointer;
 }
 
+.contact {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.contact p {
+    width: 75%;
+}
 
 /* Smooth scroll into your dms */
 .scroll-container {
@@ -430,8 +440,7 @@ form {
     justify-content: space-evenly;
     align-items: center;
     z-index: 2;
-    position: absolute;
-    top: 0;
+    scroll-snap-align: start;
 }
 
 .awards-container {

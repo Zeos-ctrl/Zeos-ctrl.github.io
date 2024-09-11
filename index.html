@@ -19,16 +19,16 @@
     </head>
     <body>
         <div class="scroll-container">
+            <div class="topbar">
+                <a href="https://zeos.systems">Home</a>
+                <a href="https://zeos.systems/services/CyberSecurity.html">Security</a>
+                <a href="https://zeos.systems/services/Software.html">Software</a>
+                <a href="https://zeos.systems/articles/articles.html">Articles</a>
+            </div>
             <div class="section">
                 <div class="background-wrapper">
                     <div class="background-pattern"></div>
                     <div class="background-fade"></div>
-                </div>
-                <div class="topbar">
-                    <a href="https://zeos.systems">Home</a>
-                    <a href="https://zeos.systems/services/CyberSecurity.html">Security</a>
-                    <a href="https://zeos.systems/services/Software.html">Software</a>
-                    <a href="https://zeos.systems/articles/articles.html">Articles</a>
                 </div>
                 <div class="main">
                     <img src="https://zeos.systems/assets/images/Logo-Large.svg" class="main-logo">
@@ -43,7 +43,7 @@
                     <div class="background-fade"></div>
                 </div>
                 <div class="missionstatement" style="background-color: #1f1f1f;">
-                    <h1>Our Mission Statement</h1>
+                    <h1><strong>Our Mission Statement</strong></h1>
                     <p>At Zeos Systems, our mission is to empower small businesses with comprehensive cybersecurity consultancy services, ensuring robust protection and true data ownership in an increasingly digital world. We are passionate about integrating advanced security measures to create zero-trust environments, safeguarding data integrity and privacy.</p>
                     <p>Our primary focus is on conducting vulnerability analysis and providing expert advice to help our clients navigate the complexities of cybersecurity threats. Additionally, we develop innovative software solutions with built-in security from the outset, leveraging technologies such as homomorphic encryption to keep data secure, even in cloud environments.</p>
                     <p>By championing local data processing and advocating for genuine data ownership, we strive to give users control and peace of mind. Our commitment to research and innovation in emerging technologies ensures that we stay ahead of the curve, providing top-notch services and solutions to our clients. Through our dedicated efforts, we aim to usher in a new era of digital trust and empowerment.</p>
@@ -86,37 +86,46 @@
                     <div class="background-pattern"></div>
                     <div class="background-fade"></div>
                 </div>
-                <div style="display: flex; flex-direction: column; align-content: center; justify-content: center; text-align: center; padding: 20px">
-                    <h2 style="font-size: 4em; width: 100%; margin: 0;">Contact Us</h2>
-                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: left;">
-                        <p>Opening Hours | 9am - 5pm | Mon - Fri</p>
+                <div class="contact">
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; flex: 0 0 50vw">
+                        <p>We would love to hear from you!</p>
+                        <h2 style="font-size: 4em; width: 100%; margin: 0; color: var(--highlight);"><strong>Contact Us</strong></h2>
+                        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <p>Opening Hours | 9am - 5pm | Mon - Fri</p>
+                            <p>Right now it's a one-man show, so any feedback or suggestions are greatly appreciated! I'd love to talk to you about anything cyber, drop me an email, and I'll get back to you as soon as I can :)</p>
+                        </div>
+                        <div style="display: flex; width: 100%; justify-content: space-evenly; align-items: center;">
+                            <a href="https://www.linkedin/companys/zeos.systems" target="_blank" rel="noopener noreferrer">
+                                <img src="https://zeos.systems/assets/images/linkedin.svg" alt="LinkedIn" style="width: 24px; height: 24px;">
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div style="height: 100%; width: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <form action="https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26" method="post">
-                        <div class="form-input">
-                            <label for="firstname">First Name:</label>
-                            <input type="text" id="firstname" name="firstname" required>
-                        </div>
-                        <div class="form-input">
-                            <label for="lastname">Last Name:</label>
-                            <input type="text" id="lastname" name="lastname" required>
-                        </div>
-                        <div class="form-input">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-input">
-                            <label for="subject">Subject:</label>
-                            <input type="text" id="subject" name="subject" required>
-                        </div>
-                        <div class="form-input">
-                            <label for="message">Message:</label><br>
-                            <textarea id="message" name="message" rows="4" cols="50" required style="height: 222px;"></textarea><br><br>
-                        </div>
+                    <div style="height: 100%; width: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 0 0 50vw;">
+                        <form action="https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26" method="post">
+                            <div class="form-input">
+                                <label for="firstname">First Name:</label>
+                                <input type="text" id="firstname" name="firstname" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="lastname">Last Name:</label>
+                                <input type="text" id="lastname" name="lastname" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="subject">Subject:</label>
+                                <input type="text" id="subject" name="subject" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="message">Message:</label><br>
+                                <textarea id="message" name="message" rows="4" cols="50" required style="height: 222px;"></textarea><br><br>
+                            </div>
 
-                        <input class="submit" type="submit" value="Submit">
-                    </form>
+                            <input class="submit" type="submit" value="Submit">
+                        </form>
+                    </div>
                 </div>
             </div>
             <footer>
