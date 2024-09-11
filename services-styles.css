@@ -3,6 +3,16 @@
     --dark: #050505;
     --highlight: #00B48C;
 }
+
+@font-face {
+    font-family: 'Eurostile';
+    src: url('eurostile-webfont.woff2') format('woff2'),
+         url('eurostile-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 @media only screen and (max-width: 900px) {
 
     .image-container img {
