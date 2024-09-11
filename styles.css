@@ -31,6 +31,7 @@ html, body {
     padding: 0;
     font-family: "Cantarell", sans-serif;
     color: var(--light);
+    overflow-x: hidden;
 }
 
 h1 {
@@ -167,6 +168,10 @@ form {
 
     .contact {
         flex-direction: column !important; 
+    }
+
+    .background-pattern {
+        animation: none !important;
     }
 }
 
