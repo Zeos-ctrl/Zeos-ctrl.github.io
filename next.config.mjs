@@ -1,49 +1,53 @@
 let userConfig = undefined
 try {
-  // try to import ESM first
-  userConfig = await import('./v0-user-next.config.mjs')
+  userConfig = await import('./v0-user-next.config')
 } catch (e) {
-  try {
-    // fallback to CJS import
-    userConfig = await import("./v0-user-next.config");
-  } catch (innerError) {
-    // ignore error
-  }
+  // ignore error
 }
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  images: {
-    unoptimized: true,
-  },
-  experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
-  },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    images: {
+        unoptimized: true,
+    },
+    experimental: {
+        webpackBuildWorker: true,
+        parallelServerBuildTraces: true,
+        parallelServerCompiles: true,
+    },
+    output: 'export',
+    // Since your site is served from the root (Zeos-ctrl.github.io), no basePath or assetPrefix is needed.
+    basePath: '',
+    assetPrefix: '',
+    images: {
+        unoptimized: true, // Required because Next.js image optimization isn’t supported in static exports.
+    },
 }
 
-if (userConfig) {
-  // ESM imports will have a "default" property
-  const config = userConfig.default || userConfig
+mergeConfig(nextConfig, userConfig)
 
-  for (const key in config) {
+function mergeConfig(nextConfig, userConfig) {
+  if (!userConfig) {
+    return
+  }
+
+  for (const key in userConfig) {
     if (
       typeof nextConfig[key] === 'object' &&
       !Array.isArray(nextConfig[key])
     ) {
       nextConfig[key] = {
         ...nextConfig[key],
-        ...config[key],
+        ...userConfig[key],
       }
     } else {
-      nextConfig[key] = config[key]
+      nextConfig[key] = userConfig[key]
     }
   }
 }
