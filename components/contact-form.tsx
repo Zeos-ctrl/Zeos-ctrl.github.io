@@ -3,10 +3,10 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Send } from "lucide-react"
+import MarathonButton from "./marathon-button"
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -24,30 +24,29 @@ export default function ContactForm() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
 
-      try {
-          const response = await fetch("https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify(formData)
-          });
+    try {
+      const response = await fetch("https://formsubmit.co/320d206f9292e1275c7759e0e5f1ad26", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
 
-          if (!response.ok) throw new Error("Form submission failed");
+      if (!response.ok) throw new Error("Form submission failed")
 
-          setSubmitStatus("success");
-          setFormData({ name: "", email: "", subject: "", message: "" });
-      } catch (error) {
-          setSubmitStatus("error");
-      } finally {
-          setIsSubmitting(false);
-          setTimeout(() => setSubmitStatus(null), 5000);
-      }
-  };
-
+      setSubmitStatus("success")
+      setFormData({ name: "", email: "", subject: "", message: "" })
+    } catch (error) {
+      setSubmitStatus("error")
+    } finally {
+      setIsSubmitting(false)
+      setTimeout(() => setSubmitStatus(null), 5000)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,11 +54,11 @@ export default function ContactForm() {
         <Input
           type="text"
           name="name"
-          placeholder="Your Name"
+          placeholder="YOUR NAME"
           value={formData.name}
           onChange={handleChange}
           required
-          className="bg-neutral-900/50 border-neutral-700 focus:border-apple-blue"
+          className="marathon-input bg-black/50 text-white"
         />
       </div>
 
@@ -67,11 +66,11 @@ export default function ContactForm() {
         <Input
           type="email"
           name="email"
-          placeholder="Your Email"
+          placeholder="YOUR EMAIL"
           value={formData.email}
           onChange={handleChange}
           required
-          className="bg-neutral-900/50 border-neutral-700 focus:border-apple-blue"
+          className="marathon-input bg-black/50 text-white"
         />
       </div>
 
@@ -79,51 +78,50 @@ export default function ContactForm() {
         <Input
           type="text"
           name="subject"
-          placeholder="Subject"
+          placeholder="SUBJECT"
           value={formData.subject}
           onChange={handleChange}
           required
-          className="bg-neutral-900/50 border-neutral-700 focus:border-apple-blue"
+          className="marathon-input bg-black/50 text-white"
         />
       </div>
 
       <div>
         <Textarea
           name="message"
-          placeholder="Your Message"
+          placeholder="YOUR MESSAGE"
           value={formData.message}
           onChange={handleChange}
           required
-          className="bg-neutral-900/50 border-neutral-700 focus:border-apple-blue min-h-[120px]"
+          className="marathon-input bg-black/50 text-white min-h-[120px]"
         />
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full bg-apple-blue hover:bg-apple-blue/90 text-white">
+      <MarathonButton type="submit" disabled={isSubmitting} variant="solid" className="w-full">
         {isSubmitting ? (
           <span className="flex items-center gap-2">
-            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
-            Sending...
+            <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></span>
+            SENDING...
           </span>
         ) : (
           <span className="flex items-center gap-2">
             <Send className="w-4 h-4" />
-            Send Message
+            SEND MESSAGE
           </span>
         )}
-      </Button>
+      </MarathonButton>
 
       {submitStatus === "success" && (
-        <div className="p-3 bg-green-900/20 border border-green-800 text-green-400 rounded-sm">
-          Thank you! Your message has been sent successfully.
+        <div className="p-3 border border-neon/30 text-neon marathon-text">
+          THANK YOU! YOUR MESSAGE HAS BEEN SENT SUCCESSFULLY.
         </div>
       )}
 
       {submitStatus === "error" && (
-        <div className="p-3 bg-red-900/20 border border-red-800 text-red-400 rounded-sm">
-          There was an error sending your message. Please try again.
+        <div className="p-3 border border-red-500/30 text-red-500 marathon-text">
+          THERE WAS AN ERROR SENDING YOUR MESSAGE. PLEASE TRY AGAIN.
         </div>
       )}
     </form>
   )
 }
-

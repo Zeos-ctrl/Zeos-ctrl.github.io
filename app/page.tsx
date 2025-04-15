@@ -1,15 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Github, Linkedin, Mail, Shield, Brain, Code, Database, ChevronDown, ArrowRight, Menu } from "lucide-react"
+import { Github, Linkedin, Mail, Shield, Brain, Code, Database, Menu } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import ContactForm from "@/components/contact-form"
-import CaseStudy from "@/components/case-study"
-import ServiceCard from "@/components/service-card"
-import DotMatrix from "@/components/dot-matrix"
 import SidebarNavigation from "@/components/sidebar-navigation"
-import TeamMember from "@/components/team-member"
 import MLUseCases from "@/components/ml-use-cases"
+import MarathonButton from "@/components/marathon-button"
+import MarathonNav from "@/components/marathon-nav"
+import AnimatedText from "@/components/animated-text"
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -17,11 +16,20 @@ export default function Home() {
   const sections = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
-    { id: "ml", label: "ML" },
+    { id: "ml-use-cases", label: "ML Use Cases" },
     { id: "services", label: "Services" },
     { id: "team", label: "Team" },
     { id: "portfolio", label: "Portfolio" },
     { id: "contact", label: "Contact" },
+  ]
+
+  const navItems = [
+    { label: "HOME", href: "#home" },
+    { label: "ABOUT", href: "#about" },
+    { label: "SERVICES", href: "#services" },
+    { label: "TEAM", href: "#team" },
+    { label: "PORTFOLIO", href: "#portfolio" },
+    { label: "CONTACT", href: "#contact" },
   ]
 
   // Set up fade-in animations that only trigger once
@@ -36,28 +44,16 @@ export default function Home() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("visible")
-
-          // Add a class to prevent re-animation after the animation completes
-          setTimeout(() => {
-            entry.target.classList.add("animation-done")
-          }, 600) // Match the duration of the animation
-
-          // Unobserve after animation to prevent re-triggering
+          setTimeout(() => entry.target.classList.add("animation-done"), 600)
           observer.unobserve(entry.target)
         }
       })
     }
 
     const observer = new IntersectionObserver(handleIntersect, observerOptions)
+    document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el))
 
-    // Observe all elements with fade-in class
-    document.querySelectorAll(".fade-in").forEach((el) => {
-      observer.observe(el)
-    })
-
-    return () => {
-      observer.disconnect()
-    }
+    return () => observer.disconnect()
   }, [])
 
   // Smooth scroll implementation
@@ -76,58 +72,36 @@ export default function Home() {
       }
     }
 
-    // Handle initial hash if present
     if (window.location.hash) {
       setTimeout(handleHashChange, 100)
     }
 
-    // Add event listener for hash changes
-    window.addEventListener("hashchange", handleHashChange)
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange)
-    }
+    // Remove the hashchange event listener as it's causing issues with navigation
+    // window.addEventListener("hashchange", handleHashChange)
+    // return () => window.removeEventListener("hashchange", handleHashChange)
   }, [])
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen)
-  }
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false)
-  }
 
   return (
     <div className="bg-black text-white font-sans max-w-[100vw] overflow-x-hidden">
+      {/* Removed MarathonGrid component */}
       <SidebarNavigation sections={sections} />
 
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-neutral-800">
-        <div className="container mx-auto px-4 py-4 flex justify-center items-center">
-          <a href="#home" className="absolute left-4 text-xl font-bold text-white">
-            ZEOS.SYSTEMS
+      <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white/10">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <a href="#home" className="flex items-center">
+            <img src="/images/zeos-logo.svg" alt="ZEOS.SYSTEMS Logo" className="h-10 w-auto logo-hover" />
           </a>
-          <nav className="hidden md:flex space-x-8 lg:space-x-12">
-            {sections.map((section) => (
-              <a
-                key={section.id}
-                href={`#${section.id}`}
-                className="uppercase text-sm tracking-wider hover:text-apple-blue transition-colors"
-              >
-                {section.label}
-              </a>
-            ))}
-          </nav>
-          <div className="absolute right-4 flex space-x-4 items-center">
-            <a
-              href="#contact"
-              className="bg-apple-blue text-white text-sm px-4 py-2 rounded-md hidden sm:flex items-center gap-2"
-            >
-              Start Now <ArrowRight className="w-4 h-4" />
-            </a>
+          <div className="hidden md:block">
+            <MarathonNav items={navItems} />
+          </div>
+          <div className="flex items-center">
+            <MarathonButton href="#contact" variant="solid" className="hidden sm:block">
+              START NOW
+            </MarathonButton>
             <button
-              className="md:hidden text-white focus:outline-none"
-              onClick={toggleMobileMenu}
+              className="md:hidden text-white ml-4 focus:outline-none"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
               <Menu className="w-6 h-6" />
@@ -143,7 +117,7 @@ export default function Home() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden bg-black/95 backdrop-blur-md border-b border-neutral-800"
+              className="md:hidden bg-black border-b border-white/10"
             >
               <div className="container mx-auto py-4 px-4">
                 <nav className="flex flex-col space-y-4">
@@ -151,19 +125,15 @@ export default function Home() {
                     <a
                       key={section.id}
                       href={`#${section.id}`}
-                      className="text-white hover:text-apple-blue py-2 transition-colors"
-                      onClick={closeMobileMenu}
+                      className="marathon-text uppercase hover:text-neon py-2 transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      {section.label}
+                      <span className="text-neon">[+]</span> {section.label.toUpperCase()}
                     </a>
                   ))}
-                  <a
-                    href="#contact"
-                    className="bg-apple-blue text-white text-sm px-4 py-3 rounded-md flex items-center justify-center gap-2 mt-2"
-                    onClick={closeMobileMenu}
-                  >
-                    Start Now <ArrowRight className="w-4 h-4" />
-                  </a>
+                  <MarathonButton href="#contact" variant="solid" onClick={() => setMobileMenuOpen(false)}>
+                    START NOW
+                  </MarathonButton>
                 </nav>
               </div>
             </motion.div>
@@ -172,79 +142,100 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="section-full pt-20">
-        <DotMatrix dotCount={1000} dotSize={3} pattern="wave" maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 flex flex-col items-center justify-center text-center relative z-10">
-          <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold mb-4 max-w-4xl fade-in">
-            World-class machine learning
-            <br />
-            for tech founders.
-          </h1>
-
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 fade-in">
-            <a
-              href="#contact"
-              className="bg-apple-blue text-white px-6 py-3 rounded-md flex items-center justify-center gap-2"
-            >
-              Launch Today <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="#portfolio"
-              className="border border-white/20 bg-white/5 backdrop-blur-sm text-white px-6 py-3 rounded-md flex items-center justify-center gap-2"
-            >
-              View Work <ChevronDown className="w-4 h-4" />
-            </a>
+      <section id="home" className="section-full pt-20 flex items-center">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-start max-w-4xl">
+            <AnimatedText
+              text="A MACHINE LEARNING & CYBERSECURITY CONSULTANCY"
+              className="marathon-text text-neon mb-2"
+              useGlitch={false}
+            />
+            <AnimatedText
+              text="ML & SECURITY EXPERTISE FOR TECH FOUNDERS"
+              className="marathon-title text-5xl md:text-7xl lg:text-8xl mb-8"
+              glitchDelay={30}
+              glitchSpeed={20}
+              glitchCount={2}
+              tag="h1"
+              useGlitch={true}
+            />
+            <AnimatedText
+              text="We provide focused machine learning and cybersecurity solutions tailored to your specific business needs. Our expertise helps tech founders implement practical AI solutions while maintaining security standards."
+              className="marathon-text text-white/80 max-w-2xl mb-8"
+              useGlitch={false}
+            />
+            <div className="flex flex-col sm:flex-row gap-4 fade-in">
+              <MarathonButton href="#contact" variant="solid">
+                LAUNCH TODAY
+              </MarathonButton>
+              <MarathonButton href="#portfolio">VIEW WORK</MarathonButton>
+            </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="section-full bg-neutral-900/30 pt-20">
-        <DotMatrix dotCount={600} dotSize={3} maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
+      <section id="about" className="section-full pt-20">
+        <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
-            <div className="md:w-1/2 fade-in">
-              <div className="text-apple-blue text-sm font-medium mb-2">// ABOUT US</div>
-              <h2 className="text-2xl md:text-4xl font-bold mb-6">
-                Our mission is to secure and optimize your workflows with AI
-              </h2>
-              <p className="text-neutral-300 mb-6">
-                At ZEOS.SYSTEMS, we combine cutting-edge expertise in machine learning and cybersecurity to deliver
-                comprehensive solutions that protect and enhance your business operations.
-              </p>
-              <p className="text-neutral-300 mb-6">
-                Founded by experts with backgrounds in data science, cybersecurity, and software engineering,
-                we're committed to making advanced technology accessible and secure for organizations of all sizes.
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-1 bg-apple-blue"></div>
-                <p className="text-apple-blue font-medium">Established 2024</p>
+            <div className="md:w-1/2">
+              <AnimatedText text="// ABOUT US" className="marathon-text text-neon mb-2" useGlitch={false} />
+              <AnimatedText
+                text="FOCUSED ON PRACTICAL AI SOLUTIONS AND SECURITY"
+                className="marathon-title text-3xl md:text-5xl mb-6"
+                glitchDelay={30}
+                glitchSpeed={20}
+                glitchCount={2}
+                tag="h2"
+                useGlitch={true}
+              />
+              <AnimatedText
+                text="At ZEOS.SYSTEMS, we offer targeted expertise in machine learning and cybersecurity to help businesses implement effective AI solutions while maintaining robust security practices."
+                className="marathon-text text-white/80 mb-6"
+                useGlitch={false}
+              />
+              <AnimatedText
+                text="Our small, specialized team brings practical experience in data science and cybersecurity to deliver solutions that address real business challenges for organizations ranging from startups to established enterprises."
+                className="marathon-text text-white/80 mb-6"
+                useGlitch={false}
+              />
+              <div className="flex items-center gap-4 fade-in">
+                <div className="w-12 h-1 bg-neon"></div>
+                <p className="marathon-text text-neon">ESTABLISHED 2024</p>
               </div>
             </div>
             <div className="md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 fade-in">
-              <div className="bg-black/50 backdrop-blur-sm p-6 border border-neutral-800 rounded-sm">
-                <h3 className="text-xl font-bold mb-2">Our Vision</h3>
-                <p className="text-neutral-300">
-                  To create a world where organizations can harness the power of AI with confidence and security.
-                </p>
+              <div className="marathon-card p-6 border border-white/10">
+                <h3 className="text-xl font-bold mb-2 text-neon">OUR VISION</h3>
+                <AnimatedText
+                  text="To help organizations implement practical AI solutions with appropriate security measures."
+                  className="marathon-text text-white/80"
+                  useGlitch={false}
+                />
               </div>
-              <div className="bg-black/50 backdrop-blur-sm p-6 border border-neutral-800 rounded-sm">
-                <h3 className="text-xl font-bold mb-2">Our Values</h3>
-                <p className="text-neutral-300">Integrity, innovation, and excellence in every solution we deliver.</p>
+              <div className="marathon-card p-6 border border-white/10">
+                <h3 className="text-xl font-bold mb-2 text-neon">OUR VALUES</h3>
+                <AnimatedText
+                  text="Practicality, transparency, and delivering measurable results."
+                  className="marathon-text text-white/80"
+                  useGlitch={false}
+                />
               </div>
-              <div className="bg-black/50 backdrop-blur-sm p-6 border border-neutral-800 rounded-sm">
-                <h3 className="text-xl font-bold mb-2">Our Approach</h3>
-                <p className="text-neutral-300">
-                  Tailored, data-driven strategies that address your unique challenges.
-                </p>
+              <div className="marathon-card p-6 border border-white/10">
+                <h3 className="text-xl font-bold mb-2 text-neon">OUR APPROACH</h3>
+                <AnimatedText
+                  text="Focused solutions that address specific business challenges with appropriate technology."
+                  className="marathon-text text-white/80"
+                  useGlitch={false}
+                />
               </div>
-              <div className="bg-black/50 backdrop-blur-sm p-6 border border-neutral-800 rounded-sm">
-                <h3 className="text-xl font-bold mb-2">Our Expertise</h3>
-                <p className="text-neutral-300">
-                  Deep knowledge in ML workflows, cybersecurity, and system optimization.
-                </p>
+              <div className="marathon-card p-6 border border-white/10">
+                <h3 className="text-xl font-bold mb-2 text-neon">OUR EXPERTISE</h3>
+                <AnimatedText
+                  text="Practical implementation of ML workflows and cybersecurity best practices."
+                  className="marathon-text text-white/80"
+                  useGlitch={false}
+                />
               </div>
             </div>
           </div>
@@ -252,17 +243,28 @@ export default function Home() {
       </section>
 
       {/* ML Use Cases Section */}
-      <section id="ml" className="section-full pt-20">
-        <DotMatrix dotCount={700} dotSize={3} maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
-          <div className="fade-in">
-            <div className="text-apple-blue text-sm font-medium mb-2">// MACHINE LEARNING USE CASES</div>
-            <h2 className="text-2xl md:text-5xl font-bold mb-4">Transforming industries with AI.</h2>
-            <p className="text-neutral-300 text-lg mb-12 max-w-2xl">
-              Machine learning is revolutionizing how businesses operate across sectors. Explore some of the key
-              applications where our expertise can drive innovation and efficiency.
-            </p>
+      <section id="ml-use-cases" className="section-full pt-20">
+        <div className="container mx-auto px-4">
+          <div>
+            <AnimatedText
+              text="// MACHINE LEARNING USE CASES"
+              className="marathon-text text-neon mb-2"
+              useGlitch={false}
+            />
+            <AnimatedText
+              text="PRACTICAL AI APPLICATIONS"
+              className="marathon-title text-3xl md:text-5xl mb-4"
+              glitchDelay={30}
+              glitchSpeed={20}
+              glitchCount={2}
+              tag="h2"
+              useGlitch={true}
+            />
+            <AnimatedText
+              text="Machine learning offers practical solutions across various sectors. Here are key applications where our expertise can help implement effective solutions."
+              className="marathon-text text-white/80 mb-12 max-w-2xl"
+              useGlitch={false}
+            />
 
             <MLUseCases />
           </div>
@@ -270,74 +272,229 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="section-full bg-neutral-900/30 pt-20">
-        <DotMatrix dotCount={500} dotSize={3} maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
-          <div className="fade-in">
-            <div className="text-apple-blue text-sm font-medium mb-2">// SERVICES</div>
-            <h2 className="text-2xl md:text-5xl font-bold mb-4">Expert solutions for complex challenges.</h2>
-            <p className="text-neutral-300 text-lg mb-12 max-w-2xl">
-              With years of experience in machine learning and cybersecurity, we specialize in creating secure,
-              efficient, and scalable solutions.
-            </p>
+      <section id="services" className="section-full pt-20">
+        <div className="container mx-auto px-4">
+          <div>
+            <AnimatedText text="// SERVICES" className="marathon-text text-neon mb-2" useGlitch={false} />
+            <AnimatedText
+              text="FOCUSED SOLUTIONS FOR SPECIFIC CHALLENGES"
+              className="marathon-title text-3xl md:text-5xl mb-4"
+              glitchDelay={30}
+              glitchSpeed={20}
+              glitchCount={2}
+              tag="h2"
+              useGlitch={true}
+            />
+            <AnimatedText
+              text="We offer targeted services in machine learning and cybersecurity, focusing on practical implementations that deliver measurable results."
+              className="marathon-text text-white/80 mb-12 max-w-2xl"
+              useGlitch={false}
+            />
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div className="fade-in">
-              <ServiceCard
-                icon={<Brain className="w-8 h-8 text-apple-blue" />}
-                title="ML Workflow Design"
-                description="End-to-end machine learning pipeline development, from data ingestion to model deployment and monitoring."
-                features={[
-                  "Data preprocessing and feature engineering",
-                  "Model selection and hyperparameter tuning",
-                  "Scalable training infrastructure",
-                  "Deployment and continuous improvement",
-                ]}
-              />
+              <div className="marathon-card p-8 border border-white/10 h-full">
+                <div className="mb-6 text-neon">
+                  <Brain className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-white">ML WORKFLOW DESIGN</h3>
+                <AnimatedText
+                  text="Practical machine learning implementation from data preparation to deployment, tailored to your specific business needs."
+                  className="marathon-text text-white/80 mb-6"
+                  useGlitch={false}
+                />
+
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Data preprocessing and feature engineering"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Model selection and hyperparameter tuning"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Scalable training infrastructure"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Deployment and monitoring solutions"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                </ul>
+
+                <MarathonButton href="#contact">LEARN MORE</MarathonButton>
+              </div>
             </div>
 
             <div className="fade-in">
-              <ServiceCard
-                icon={<Shield className="w-8 h-8 text-apple-blue" />}
-                title="Cybersecurity Consulting"
-                description="Comprehensive security assessments and solutions to protect your data and systems from evolving threats."
-                features={[
-                  "Vulnerability assessment and penetration testing",
-                  "Security architecture design",
-                  "Incident response planning",
-                  "Compliance and regulatory guidance",
-                ]}
-              />
+              <div className="marathon-card p-8 border border-white/10 h-full">
+                <div className="mb-6 text-neon">
+                  <Shield className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-white">CYBERSECURITY CONSULTING</h3>
+                <AnimatedText
+                  text="Targeted security assessments and practical solutions to protect your data and systems based on your specific risk profile."
+                  className="marathon-text text-white/80 mb-6"
+                  useGlitch={false}
+                />
+
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Vulnerability assessment and penetration testing"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Security architecture design"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Incident response planning"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Compliance and regulatory guidance"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                </ul>
+
+                <MarathonButton href="#contact">LEARN MORE</MarathonButton>
+              </div>
             </div>
 
             <div className="fade-in">
-              <ServiceCard
-                icon={<Code className="w-8 h-8 text-apple-blue" />}
-                title="Secure Software Development"
-                description="Building robust applications with security integrated throughout the development lifecycle."
-                features={[
-                  "Secure coding practices",
-                  "Code review and vulnerability scanning",
-                  "DevSecOps implementation",
-                  "API security and authentication",
-                ]}
-              />
+              <div className="marathon-card p-8 border border-white/10 h-full">
+                <div className="mb-6 text-neon">
+                  <Code className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-white">SECURE SOFTWARE DEVELOPMENT</h3>
+                <AnimatedText
+                  text="Implementing security best practices throughout the development process to build more resilient applications."
+                  className="marathon-text text-white/80 mb-6"
+                  useGlitch={false}
+                />
+
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Secure coding practices"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Code review and vulnerability scanning"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="DevSecOps implementation"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="API security and authentication"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                </ul>
+
+                <MarathonButton href="#contact">LEARN MORE</MarathonButton>
+              </div>
             </div>
 
             <div className="fade-in">
-              <ServiceCard
-                icon={<Database className="w-8 h-8 text-apple-blue" />}
-                title="Data Security & Governance"
-                description="Protecting sensitive data while ensuring compliance with regulatory requirements."
-                features={[
-                  "Data classification and mapping",
-                  "Encryption and access control",
-                  "Privacy compliance (GDPR, CCPA)",
-                  "Data loss prevention strategies",
-                ]}
-              />
+              <div className="marathon-card p-8 border border-white/10 h-full">
+                <div className="mb-6 text-neon">
+                  <Database className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-white">DATA SECURITY & GOVERNANCE</h3>
+                <AnimatedText
+                  text="Practical approaches to data protection that balance security requirements with operational needs."
+                  className="marathon-text text-white/80 mb-6"
+                  useGlitch={false}
+                />
+
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Data classification and mapping"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Encryption and access control"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Privacy compliance (GDPR, CCPA)"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-neon mt-1">›</span>
+                    <AnimatedText
+                      text="Data loss prevention strategies"
+                      className="marathon-text text-white/80"
+                      useGlitch={false}
+                    />
+                  </li>
+                </ul>
+
+                <MarathonButton href="#contact">LEARN MORE</MarathonButton>
+              </div>
             </div>
           </div>
         </div>
@@ -345,106 +502,186 @@ export default function Home() {
 
       {/* Team Section */}
       <section id="team" className="section-full pt-20">
-        <DotMatrix dotCount={600} dotSize={3} maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
-          <div className="fade-in">
-            <div className="text-apple-blue text-sm font-medium mb-2">// OUR TEAM</div>
-            <h2 className="text-2xl md:text-5xl font-bold mb-4">Meet the experts.</h2>
-            <p className="text-neutral-300 text-lg mb-12 max-w-2xl">
-              Our team brings together experience in machine learning, cybersecurity, and software
-              development.
-            </p>
+        <div className="container mx-auto px-4">
+          <div>
+            <AnimatedText text="// OUR TEAM" className="marathon-text text-neon mb-2" useGlitch={false} />
+            <AnimatedText
+              text="MEET THE TEAM"
+              className="marathon-title text-3xl md:text-5xl mb-4"
+              glitchDelay={30}
+              glitchSpeed={20}
+              glitchCount={2}
+              tag="h2"
+              useGlitch={true}
+            />
+            <AnimatedText
+              text="Our specialized team combines academic expertise with practical industry experience to deliver targeted solutions."
+              className="marathon-text text-white/80 mb-12 max-w-2xl"
+              useGlitch={false}
+            />
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="fade-in">
-              <TeamMember
-                name="Connor Bryan"
-                role="Founder"
-                bio="Bsc Computer Security (Cardiff Met), Msc Data Intensive Physics (Cardiff Uni). 8+ years of experience in the security sector."
-                image="/images/connor_bryan.webp?height=400&width=300&text=connor&bryan"
-                socialLinks={[
-                  { platform: "linkedin", url: "https://www.linkedin.com/in/connor-bryan-92144922b" },
-                  { platform: "github", url: "https://github.com/Zeos-ctrl" },
-                  /*{ platform: "twitter", url: "https://twitter.com/" },*/
-                ]}
-              />
+              <div className="marathon-card border border-white/10 overflow-hidden group">
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src="/images/connor_bryan.webp?height=400&width=300&text=connor&bryan"
+                    alt="Connor Bryan"
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-1 text-white">CONNOR BRYAN</h3>
+                  <p className="marathon-text text-neon text-sm mb-4">FOUNDER</p>
+                  <AnimatedText
+                    text="Combining 8+ years in the security sector with academic credentials in Computer Security and Data Intensive Physics. Specialized in applying ML techniques to security challenges and scientific data analysis."
+                    className="marathon-text text-white/80 mb-4 text-sm"
+                    useGlitch={false}
+                  />
+
+                  <div className="flex space-x-3">
+                    <a
+                      href="https://www.linkedin.com/in/connor-bryan-92144922b"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 flex items-center justify-center text-neon hover:text-white transition-colors"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                    </a>
+                    <a
+                      href="https://github.com/Zeos-ctrl"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 flex items-center justify-center text-neon hover:text-white transition-colors"
+                    >
+                      <Github className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Portfolio Section */}
-      <section id="portfolio" className="section-full bg-neutral-900/30 pt-20">
-        <DotMatrix dotCount={700} dotSize={3} maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
-          <div className="fade-in">
-            <div className="text-apple-blue text-sm font-medium mb-2">// PORTFOLIO</div>
-            <h2 className="text-2xl md:text-5xl font-bold mb-4">Research & expertise.</h2>
-            <p className="text-neutral-300 text-lg mb-12 max-w-2xl">
-              Showcasing our machine learning research projects and expertise. We apply these same advanced techniques
-              to solve complex problems for our clients.
-            </p>
+      <section id="portfolio" className="section-full pt-20">
+        <div className="container mx-auto px-4">
+          <div>
+            <AnimatedText text="// PORTFOLIO" className="marathon-text text-neon mb-2" useGlitch={false} />
+            <AnimatedText
+              text="RESEARCH & EXPERTISE"
+              className="marathon-title text-3xl md:text-5xl mb-4"
+              glitchDelay={30}
+              glitchSpeed={20}
+              glitchCount={2}
+              tag="h2"
+              useGlitch={true}
+            />
+            <AnimatedText
+              text="Showcasing our machine learning research projects and expertise. We apply these same advanced techniques to solve complex problems for our clients."
+              className="marathon-text text-white/80 mb-12 max-w-2xl"
+              useGlitch={false}
+            />
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="fade-in">
-              <CaseStudy
-                title="Gravitational Wave Analysis"
-                client="Research Project"
-                description="Developed a machine learning model to analyze gravitational wave signals and estimate paramaters of the merger event, improving efficiency and accuracy of astronomical data processing."
-                technologies={["Python", "TensorFlow", "NumPy", "Signal Processing", "Astronomy Data"]}
-                image="/images/grav.webp"
-              />
-            </div>
-
-            <div className="fade-in">
-              <CaseStudy
-                title="Urban Sounds Classification"
-                client="Research Project"
-                description="Created an audio classification system that can identify and categorize urban environmental sounds, enabling applications in noise pollution monitoring, urban planning, and smart city development."
-                technologies={["TensorFlow", "Audio Processing", "Mel Spectrograms", "Transformers", "FNO"]}
-                image="/images/city.webp"
-              />
-            </div>
-
-            <div className="fade-in">
-              <div className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-sm overflow-hidden p-6 flex flex-col justify-center items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-apple-blue/10 flex items-center justify-center mb-4">
-                  <Shield className="w-8 h-8 text-apple-blue" />
+              <div className="marathon-card border border-white/10 overflow-hidden">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src="/images/grav.webp"
+                    alt="Gravitational Wave Analysis"
+                    className="object-cover w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-6">
+                    <p className="marathon-text text-neon text-sm mb-1">RESEARCH PROJECT</p>
+                    <h3 className="text-xl font-bold text-white">GRAVITATIONAL WAVE ANALYSIS</h3>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Your Security Project</h3>
-                <p className="text-neutral-300 mb-4">
-                  We're ready to help secure your machine learning workflows and systems. Contact us to discuss your
-                  specific needs.
-                </p>
-                <a
-                  href="#contact"
-                  className="px-4 py-2 bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 transition-colors rounded-sm"
-                >
-                  Get Started
-                </a>
+
+                <div className="p-6">
+                  <AnimatedText
+                    text="Developed a machine learning model to analyze gravitational wave signals and estimate parameters of the merger event, improving efficiency and accuracy of astronomical data processing."
+                    className="marathon-text text-white/80 mb-4"
+                    useGlitch={false}
+                  />
+
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">PYTHON</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">TENSORFLOW</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">NUMPY</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">SIGNAL PROCESSING</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">ASTRONOMY DATA</span>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div className="fade-in">
-              <div className="bg-black/50 backdrop-blur-sm border border-neutral-800 rounded-sm overflow-hidden p-6 flex flex-col justify-center items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-apple-blue/10 flex items-center justify-center mb-4">
-                  <Brain className="w-8 h-8 text-apple-blue" />
+              <div className="marathon-card border border-white/10 overflow-hidden">
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src="/images/city.webp"
+                    alt="Urban Sounds Classification"
+                    className="object-cover w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-6">
+                    <p className="marathon-text text-neon text-sm mb-1">RESEARCH PROJECT</p>
+                    <h3 className="text-xl font-bold text-white">URBAN SOUNDS CLASSIFICATION</h3>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Your ML Workflow</h3>
-                <p className="text-neutral-300 mb-4">
-                  Looking to optimize your machine learning pipeline? We can help design efficient, scalable, and secure
-                  workflows.
-                </p>
-                <a
-                  href="#contact"
-                  className="px-4 py-2 bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 transition-colors rounded-sm"
-                >
-                  Learn More
-                </a>
+
+                <div className="p-6">
+                  <AnimatedText
+                    text="Created an audio classification system that can identify and categorize urban environmental sounds, enabling applications in noise pollution monitoring, urban planning, and smart city development."
+                    className="marathon-text text-white/80 mb-4"
+                    useGlitch={false}
+                  />
+
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">TENSORFLOW</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">AUDIO PROCESSING</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">MEL SPECTROGRAMS</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">NEURAL OPERATORS</span>
+                    <span className="px-2 py-1 text-xs marathon-text bg-white/5 text-neon">TRANSFORMERS</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="fade-in">
+              <div className="marathon-card p-6 border border-white/10 flex flex-col justify-center items-center text-center">
+                <div className="w-16 h-16 flex items-center justify-center mb-4 text-neon">
+                  <Shield className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-white">YOUR SECURITY PROJECT</h3>
+                <AnimatedText
+                  text="We're ready to help secure your machine learning workflows and systems. Contact us to discuss your specific needs."
+                  className="marathon-text text-white/80 mb-4"
+                  useGlitch={false}
+                />
+                <MarathonButton href="#contact">GET STARTED</MarathonButton>
+              </div>
+            </div>
+
+            <div className="fade-in">
+              <div className="marathon-card p-6 border border-white/10 flex flex-col justify-center items-center text-center">
+                <div className="w-16 h-16 flex items-center justify-center mb-4 text-neon">
+                  <Brain className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-white">YOUR ML WORKFLOW</h3>
+                <AnimatedText
+                  text="Looking to optimize your machine learning pipeline? We can help design efficient, scalable, and secure workflows."
+                  className="marathon-text text-white/80 mb-4"
+                  useGlitch={false}
+                />
+                <MarathonButton href="#contact">LEARN MORE</MarathonButton>
               </div>
             </div>
           </div>
@@ -453,26 +690,33 @@ export default function Home() {
 
       {/* Contact Section */}
       <section id="contact" className="section-full pt-20">
-        <DotMatrix dotCount={500} dotSize={3} maxDistance={150} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
+        <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
-            <div className="md:w-1/2 fade-in">
-              <div className="text-apple-blue text-sm font-medium mb-2">// CONTACT US</div>
-              <h2 className="text-2xl md:text-4xl font-bold mb-6">Let's discuss your project</h2>
-              <p className="text-neutral-300 mb-8">
-                Ready to enhance your machine learning workflows or strengthen your cybersecurity posture? Get in touch
-                with our team of experts to discuss how we can help you achieve your goals.
-              </p>
+            <div className="md:w-1/2">
+              <AnimatedText text="// CONTACT US" className="marathon-text text-neon mb-2" useGlitch={false} />
+              <AnimatedText
+                text="LET'S DISCUSS YOUR PROJECT"
+                className="marathon-title text-3xl md:text-5xl mb-6"
+                glitchDelay={30}
+                glitchSpeed={20}
+                glitchCount={2}
+                tag="h2"
+                useGlitch={true}
+              />
+              <AnimatedText
+                text="Interested in implementing machine learning or improving your cybersecurity posture? Contact us to discuss how our focused expertise can help address your specific challenges."
+                className="marathon-text text-white/80 mb-8"
+                useGlitch={false}
+              />
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-10 h-10 rounded-full bg-apple-blue/10 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-apple-blue" />
+                <div className="w-10 h-10 flex items-center justify-center text-neon">
+                  <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-sm text-neutral-400">Email us at</p>
-                  <a href="mailto:info@zeos.systems" className="text-apple-blue hover:underline">
-                    connor.bryan@zeos.systems
+                  <p className="text-sm text-white/60">EMAIL US AT</p>
+                  <a href="mailto:connor.bryan@zeos.systems" className="text-neon hover:underline marathon-text">
+                    CONNOR.BRYAN@ZEOS.SYSTEMS
                   </a>
                 </div>
               </div>
@@ -482,24 +726,24 @@ export default function Home() {
                   href="https://github.com/Zeos-ctrl"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-apple-blue/10 flex items-center justify-center hover:bg-apple-blue/20 transition-colors"
+                  className="w-10 h-10 flex items-center justify-center text-neon hover:text-white transition-colors"
                 >
-                  <Github className="w-5 h-5 text-apple-blue" />
+                  <Github className="w-5 h-5" />
                 </a>
                 <a
                   href="https://linkedin.com/company/98955018"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-apple-blue/10 flex items-center justify-center hover:bg-apple-blue/20 transition-colors"
+                  className="w-10 h-10 flex items-center justify-center text-neon hover:text-white transition-colors"
                 >
-                  <Linkedin className="w-5 h-5 text-apple-blue" />
+                  <Linkedin className="w-5 h-5" />
                 </a>
               </div>
             </div>
 
             <div className="md:w-1/2 fade-in">
-              <div className="bg-black/50 backdrop-blur-sm p-8 border border-neutral-800 rounded-sm">
-                <h3 className="text-xl font-bold mb-6">Send us a message</h3>
+              <div className="marathon-card p-8 border border-white/10">
+                <h3 className="text-xl font-bold mb-6 text-white">SEND US A MESSAGE</h3>
                 <ContactForm />
               </div>
             </div>
@@ -508,38 +752,24 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-neutral-800 relative">
-        <DotMatrix dotCount={300} dotSize={2} maxDistance={100} />
-
-        <div className="container mx-auto px-4 md:pl-24 lg:pl-32 relative z-10">
+      <footer className="py-8 border-t border-white/10 mt-20">
+        <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <p className="text-neutral-400 text-sm">
-                &copy; {new Date().getFullYear()} ZEOS.SYSTEMS. All rights reserved.
+              <p className="marathon-text text-white/60 text-sm">
+                &copy; {new Date().getFullYear()} <span className="text-neon">ZEOS.SYSTEMS</span>. All rights reserved.
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-              <a href="#home" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                Home
-              </a>
-              <a href="#about" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                About
-              </a>
-              <a href="#ml-use-cases" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                ML Use Cases
-              </a>
-              <a href="#services" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                Services
-              </a>
-              <a href="#team" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                Team
-              </a>
-              <a href="#portfolio" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                Portfolio
-              </a>
-              <a href="#contact" className="text-sm text-neutral-400 hover:text-apple-blue transition-colors">
-                Contact
-              </a>
+              {navItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.href}
+                  className="text-sm marathon-text text-white/60 hover:text-neon transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -547,4 +777,3 @@ export default function Home() {
     </div>
   )
 }
-

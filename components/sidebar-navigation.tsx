@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 
 interface SidebarNavigationProps {
   sections: { id: string; label: string }[]
@@ -10,8 +9,9 @@ interface SidebarNavigationProps {
 export default function SidebarNavigation({ sections }: SidebarNavigationProps) {
   const [activeSection, setActiveSection] = useState("")
   const [isMobile, setIsMobile] = useState(false)
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null)
 
-  // Check if mobile on mount and when window resizes
+  // Check if mobile on mount and when window resizes or orientation changes
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 1024)
@@ -19,37 +19,11 @@ export default function SidebarNavigation({ sections }: SidebarNavigationProps) 
 
     checkIfMobile()
     window.addEventListener("resize", checkIfMobile)
+    window.addEventListener("orientationchange", checkIfMobile)
 
     return () => {
       window.removeEventListener("resize", checkIfMobile)
-    }
-  }, [])
-
-  // Set up fade-in animations for content
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.1,
-    }
-
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible")
-        }
-      })
-    }
-
-    const observer = new IntersectionObserver(handleIntersect, observerOptions)
-
-    // Observe all elements with fade-in class
-    document.querySelectorAll(".fade-in").forEach((el) => {
-      observer.observe(el)
-    })
-
-    return () => {
-      observer.disconnect()
+      window.removeEventListener("orientationchange", checkIfMobile)
     }
   }, [])
 
@@ -117,64 +91,62 @@ export default function SidebarNavigation({ sections }: SidebarNavigationProps) 
     }
   }
 
-  // Mobile navigation at the bottom
+  // Mobile navigation on the left side - ultra thin version
   if (isMobile) {
     return (
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex justify-center">
-        <div className="bg-black/80 backdrop-blur-sm border border-neutral-800 rounded-full px-4 py-2 flex space-x-3">
+      <div className="fixed left-1 top-1/2 transform -translate-y-1/2 z-50">
+        <div className="bg-black/70 backdrop-blur-sm border border-white/10 rounded-lg py-3 px-1 flex flex-col space-y-5">
           {sections.map(({ id, label }) => (
             <button
               key={id}
               onClick={() => scrollToSection(id)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                activeSection === id ? "bg-apple-blue scale-125" : "bg-white/20"
-              }`}
+              className="flex items-center"
               aria-label={`Scroll to ${label} section`}
-            />
+              title={label}
+            >
+              <div
+                className={`w-1 h-6 rounded-full transition-all duration-300 ${
+                  activeSection === id ? "bg-neon" : "bg-white/20 hover:bg-white/40"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>
     )
   }
 
-  // Desktop sidebar navigation
+  // Desktop sidebar navigation - matching mobile style with hover labels
   return (
     <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 hidden lg:block">
-      <div className="flex flex-col items-start space-y-6">
+      <div className="bg-black/70 backdrop-blur-sm border border-white/10 rounded-lg py-3 px-1 flex flex-col space-y-5">
         {sections.map(({ id, label }) => (
           <div
             key={id}
-            className="group flex items-center space-x-4 cursor-pointer"
+            className="relative group"
             onClick={() => scrollToSection(id)}
+            onMouseEnter={() => setHoveredSection(id)}
+            onMouseLeave={() => setHoveredSection(null)}
           >
-            <div className="relative h-2 w-2">
-              <motion.div
-                className="absolute inset-0 bg-white rounded-full"
-                initial={{ scale: 0.5, opacity: 0.2 }}
-                animate={{
-                  scale: activeSection === id ? 1 : 0.5,
-                  opacity: activeSection === id ? 1 : 0.2,
-                  backgroundColor: activeSection === id ? "#0A84FF" : "#FFFFFF",
-                }}
-                transition={{ duration: 0.3 }}
+            <button className="flex items-center cursor-pointer" aria-label={`Scroll to ${label} section`}>
+              <div
+                className={`w-1 h-8 rounded-full transition-all duration-300 ${
+                  activeSection === id ? "bg-neon" : "bg-white/20 group-hover:bg-white/40"
+                }`}
               />
-            </div>
+            </button>
 
-            <motion.div
-              className="overflow-hidden"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{
-                width: activeSection === id ? "auto" : 0,
-                opacity: activeSection === id ? 1 : 0,
-              }}
-              transition={{ duration: 0.3 }}
+            {/* Label that appears on hover */}
+            <div
+              className={`absolute left-4 top-1/2 -translate-y-1/2 whitespace-nowrap bg-black/90 px-2 py-1 rounded text-xs text-neon opacity-0 transition-opacity duration-200 pointer-events-none ${
+                hoveredSection === id ? "opacity-100" : ""
+              }`}
             >
-              <span className="whitespace-nowrap text-apple-blue text-xs">{label}</span>
-            </motion.div>
+              {label}
+            </div>
           </div>
         ))}
       </div>
     </div>
   )
 }
-

@@ -55,7 +55,7 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-          inter: ['Inter', 'sans-serif'],
+        sans: ["Inter", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -77,4 +77,3 @@ const config = {
 } satisfies Config
 
 export default config
-
