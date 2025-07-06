@@ -1,0 +1,175 @@
+{
+  "personal": {
+    "name": "Connor Bryan",
+    "title": "Machine Learning Engineer & Data Scientist",
+    "contact": {
+      "phone": "+44 (0) 7866 989773",
+      "email": "swimconnor4@gmail.com",
+      "address": "22 Abingdon Road, Dorchester-on-Thames, Oxford, Ox10 7jy",
+      "linkedin": "linkedin.com/in/connor-bryan-oxford",
+      "github": "github.com/Zeos-ctrl"
+    },
+    "profile": "Passionate about Machine Learning with an MSc in Data-Intensive Physics (Cardiff University) and a First-Class BSc in Cyber Security. Hands-on experience developing and applying ML models to gravitational-wave time-series data. British international-level swimmer: disciplined, goal-oriented team player accustomed to high-pressure environments. Proficient in Python, scikit-learn, TensorFlow, and data pipeline development."
+  },
+  "sections": {
+    "skills": {
+      "title": "Key Skills",
+      "categories": [
+        {
+          "name": "Machine Learning & Data Science",
+          "items": [
+            "Python",
+            "scikit-learn",
+            "TensorFlow",
+            "Keras",
+            "pandas",
+            "NumPy",
+            "MCMC",
+            "Neural operator concepts"
+          ]
+        },
+        {
+          "name": "Data Engineering & Tools",
+          "items": ["Kubernetes", "Docker", "Git/GitHub", "data preprocessing", "visualization (Matplotlib)"]
+        },
+        {
+          "name": "Programming Languages",
+          "items": ["Python", "C/C++", "Rust", "Html/CSS", "Typescript/Javascript", "Java", "Lua", "SQL"]
+        },
+        {
+          "name": "Physics Analysis",
+          "items": ["Gravitational-wave parameter estimation", "numerical relativity concepts", "signal processing"]
+        },
+        {
+          "name": "Software Development",
+          "items": ["Agile development", "SDLC", "Scientific documentation"]
+        }
+      ]
+    },
+    "research": {
+      "title": "Research",
+      "projects": [
+        {
+          "title": "Accelerating Simulation-Based Inference with Neural Networks",
+          "period": "April 2025 – Present",
+          "supervisor": "Dr Vivien Raymond",
+          "institution": "Cardiff University",
+          "description": "Created a full machine learning pipeline to generate long lived gravitational waveforms faster than current solutions. In early testing the network achieved a 10x speed improvement within 1% accuracy."
+        },
+        {
+          "title": "Estimating parameters of gravitational wave bursts using machine learning",
+          "period": "Nov 2024 – March 2025",
+          "supervisor": "Mr W. Javed",
+          "institution": "Cardiff University",
+          "description": "Developed CNN models in Python to estimate binary merger parameters from simulated waveforms. Created data pipeline ingesting time-series strain data, preprocessing via normalization and feature extraction. Included a transformer for further feature extraction and demonstrated how adding a transformer to this network could reduce prediction bias."
+        },
+        {
+          "title": "Analysing Gravitational Wave data and estimating parameters",
+          "period": "Sept. 2024 – Dec. 2024",
+          "supervisor": "Data Science",
+          "institution": "Cardiff University",
+          "description": "Analyzed observed gravitational wave data to estimate the distance and mass of a binary black hole merger. Using a Monte Carlo Markov Chain (MCMC) method, compared the observed data to a reference waveform, enabling precise parameter estimation."
+        },
+        {
+          "title": "Efficiency of identity based cryptographic key encryption in IoT devices",
+          "period": "Sept. 2023 – May. 2024",
+          "supervisor": "Dr A. Abuarqoub",
+          "institution": "Cardiff Metropolitan",
+          "description": "Benchmarked Ascon vs AES cipher implementations in C on ARM Cortex-M microcontrollers. Demonstrated 20% throughput improvement with the Ascon cipher suite."
+        }
+      ]
+    },
+    "experience": {
+      "title": "Professional Experience",
+      "positions": [
+        {
+          "title": "Founder",
+          "company": "Zeos Systems",
+          "period": "2024 – Present",
+          "website": "www.zeos.systems",
+          "responsibilities": [
+            "Designing and developing security aware machine learning pipelines for companies.",
+            "Developed a tool to make designing machine learning pipelines easier for beginners using a drag and drop system (arc.zeos.systems/site)"
+          ]
+        },
+        {
+          "title": "Level 1 Swimming Coach",
+          "company": "Abingdon Vale Swimming Club",
+          "period": "2022 – Present",
+          "responsibilities": [
+            "Coached competitive swimmers; planned training sessions; managed team logistics at meets.",
+            "Mentored athletes to achieve personal bests at regional and national competitions."
+          ]
+        },
+        {
+          "title": "Access Control Engineer",
+          "company": "Darren Bryan Security Services",
+          "period": "2018 – Present",
+          "responsibilities": [
+            "Installed and maintained locks, CCTV, automated gates; solved complex security system challenges",
+            "Applied systematic troubleshooting and client communication to ensure system reliability"
+          ]
+        }
+      ]
+    },
+    "education": {
+      "title": "Education",
+      "degrees": [
+        {
+          "degree": "MSc Data Intensive Physics",
+          "period": "Sept. 2024 – Sept. 2025 (expected)",
+          "level": "Masters",
+          "institution": "Cardiff University",
+          "modules": [
+            "Data Science",
+            "Observational Gravitational Wave Astronomy",
+            "Numerical Relativity and Waveform Modeling",
+            "Applied Machine Learning",
+            "Principles of Machine Learning",
+            "Physics and Reality"
+          ],
+          "project": "ML parameter estimation of gravitational-wave bursts (mass, distance, sky location) using convolutional neural networks."
+        },
+        {
+          "degree": "BSc Cyber Security (1st Class Hon)",
+          "period": "Sept. 2021 – Jun. 2024",
+          "level": "Undergraduate",
+          "institution": "Cardiff Metropolitan",
+          "modules": [
+            "Development Project",
+            "Developing Quality Software and Systems II",
+            "Research and Professional Skills",
+            "Principles of Programming"
+          ],
+          "award": "Cyber Security Student of the Year (2024)"
+        },
+        {
+          "degree": "Extended Diploma in Engineering (MMM)",
+          "period": "Sep. 2018 – June 2020",
+          "level": "L3",
+          "institution": "Oxford City College",
+          "description": "Covered mechanical, electrical, and systems engineering fundamentals"
+        }
+      ]
+    },
+    "achievements": {
+      "title": "Certifications & Awards",
+      "items": [
+        "ISO27001 Internal Auditor (2024)",
+        "Swim England Assistant Swimming Coach L1 (2023)",
+        "Hack the Box Certificates (2024)",
+        "Codecademy ML & Python Certificates (2024)",
+        "Nominated Cardiff Met Athlete of the Year (2024)"
+      ]
+    },
+    "extracurricular": {
+      "title": "Extracurricular & Leadership",
+      "activities": [
+        "Advocate for Athlete Mental Health: Started a movement within the Cardiff Metropolitan swimming team to raise awareness over the pressure high performance athletes face.",
+        "Team Advisor for Cardiff Met Swimming (2023-24), Social Secretary, Denshinkan Kendo (2023/24), Treasurer, Denshinkan Kendo (2022/23).",
+        "British / Welsh International Athlete: GB swimming at European Junior Games (2017), Team Wales at Commonwealth Youth Games (2017), Short listed for Team Wales Commonwealth Games (2022), Multiple time Welsh record holder for 50m, 100m and 200m Breaststroke events, Multiple time British National Medallist, Multiple time British Olympic Trial finalist, Five times County champion in 50m breaststroke.",
+        "Public Outreach: Speaker at Astronomy on Tap, Cardiff—engaging public audiences in astrophysics"
+      ]
+    }
+  }
+}
