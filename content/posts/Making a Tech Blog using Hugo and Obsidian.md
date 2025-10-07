@@ -8,19 +8,19 @@ tags:
   - github
 ---
 
-For a while I've wanted to start a blog to share my ideas and try to articulate what I've learnt. Before this iteration of the blog i tried using a template yaml file within JS to create blog posts. This approach was terrible, it was hard to see any syntax or even format it properly afterwards, sometimes its better to use already developed tools and technqiues. Thats where i found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post i will be going over the steps i took to create this blog, and hopefully inspire you to create one as its so easy to acheive. 
+For a while, I've wanted to start a blog to share my ideas and try to articulate what I've learned. Before this iteration of the blog, I tried using a template YAML file within JavaScript to create blog posts. This approach was terrible; it was hard to see any syntax or even format it properly afterward. Sometimes, it's better to use already developed tools and techniques. That's where I found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the Markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post, I will go over the steps I took to create this blog, and hopefully inspire you to create one as it's so easy to achieve.
 
 {{< youtube dnE7c0ELEH8 >}}
 
 ## Setting up Obsidian
 
-The first thing we will do is install Obsidian and set up our blog posts directory. Obsidian is a note taking and organization tool that i've started to love using. You can organise markdown notes and content in folders to create a "second brain". There are tools to set up personalised daily notes so you can track habits and create diarys, this content is synced between devices on you account aswell. Download the app from https://obsidian.md/ and go through the setup.
+The first thing we will do is install Obsidian and set up our blog posts directory. Obsidian is a note-taking and organisation tool that I've started to love using. You can organise markdown notes and content in folders to create a "second brain." There are tools to set up personalised daily notes so you can track habits and create diaries. This content is synced between devices on your account as well. Download the app from https://obsidian.md/ and go through the setup.
 
 After you have setup Obsidian:
 - Create a new folder where you will put all you blog posts, I labelled mine "posts".
-- You can start to write your posts in this directory, all you need now is the path to the directory. Right click the folder and select "reveal in explorer". Keep a note of this path as we will need it later
+- You can start to write your posts in this directory, all you need now is the path to the directory. Right click the folder and select "reveal in explorer". Keep a note of this path as we will need it later.
 
-![[2025-10-07-110008_528x594_scrot.png]]
+![](/images/2025-10-07-110008_528x594_scrot.png)
 
 In order for the blog to have a title and tags we need to set some properties, all you need to add to the top of your document is.
 
@@ -37,7 +37,7 @@ tags:
 
 ## Setting up Hugo
 
-Firstly, install Git ([https://github.com/git-guides/install-git](https://github.com/git-guides/install-git)), and Go (https://go.dev/dl/) and follow the steps to install for your system at https://gohugo.io/installation/. The install is simple for linux as you can install it with your package manager. After everything is installed you can start to create your website.
+Firstly, install Git ([https://github.com/git-guides/install-git](https://github.com/git-guides/install-git)) and Go (https://go.dev/dl/) and follow the steps to install for your system at https://gohugo.io/installation/. The installation is simple for Linux, as you can install it with your package manager. After everything is installed, you can start creating your website.
 
 ```sh
 ## Verify Hugo works
@@ -49,7 +49,7 @@ hugo new site sitename
 cd sitename
 ```
 
-Update "sitename" with the project name. Next you need to theme your site, my site uses Blowfish as a theme (https://blowfish.page/) however an entire list of themes can be found here https://themes.gohugo.io/. Follow the instructions to install the theme in your Hugo site, the easiest way is to use a git submodule however. WARNING: These commands will differ depending on themes, follow the instructions on the theme page.
+Update "sitename" with the project name. Next, you need to theme your site. My site uses Blowfish as a theme (https://blowfish.page/); however, an entire list of themes can be found here: https://themes.gohugo.io/. Follow the instructions to install the theme in your Hugo site. The easiest way is to use a Git submodule, however. WARNING: These commands will differ depending on the theme; follow the instructions on the theme page.
 
 ```sh
 ## Initialize a git repository (Make sure you are in your Hugo website directory)
@@ -73,7 +73,7 @@ cp themes/blowfish/config/_default/* config/_default/
 rm hugo.toml
 ```
 
-You can go through and mess with the configs so you site looks how you want it to. After you've configured your site you can now test it with:
+You can go through and update the config so you site looks how you want it to. After you've configured your site you can now test it with:
 
 ```sh
 ## Verify Hugo works with your theme by running this command
@@ -83,7 +83,7 @@ hugo server -t themename
 
 ## Getting content on your site
 
-All your content for the website lives in the "content" folder. If you have different pages you need a corresponding folder within the content directory. For our blog posts we will make a directory called "posts" in the content folder and copy our content from Obsidian into this folder.
+All your content for the website lives in the "content" folder. If you have different pages, you need a corresponding folder within the content directory. For our blog posts, we will create a directory called "posts" in the content folder and copy our content from Obsidian into this folder.
 
 For Windows use:
 
@@ -97,7 +97,7 @@ For Mac/Linux use:
 rsync -av --delete "sourcepath" "destinationpath"
 ```
 
-Finally, to add images to these posts we will use a script made by NetworkCheck. He explains it in his video which i highly recommend watching as a follow along. Make sure you have the correct paths to your own Obsidian Vault and Hugo site. These are python scripts so make sure you have python installed to run them.
+Finally, to add images to these posts, we will use a script made by NetworkCheck. He explains it in his video, which I highly recommend watching as a follow-along. Make sure you have the correct paths to your own Obsidian Vault and Hugo site. These are Python scripts, so make sure you have Python installed to run them.
 
 For Windows:
 
@@ -181,13 +181,13 @@ for filename in os.listdir(posts_dir):
 print("Markdown files processed and images copied successfully.")
 ```
 
-Congratulations! After all these steps are done we can run the Hugo server locally and hopefully see our formatted blog posts. This is all well and good, however if we want anyone to be able to read these we need to get them hosted onto the internet. Luckily, GitHub has a free hosting service "GitHub pages".
+Congratulations! After all these steps are done, we can run the Hugo server locally and hopefully see our formatted blog posts. This is all well and good; however, if we want anyone to be able to read these, we need to get them hosted on the internet. Luckily, GitHub has a free hosting service called "GitHub Pages.
 
 ## Setting up GitHub Pages
 
-GitHub pages is simple to setup, i will be following the official instructions to walk you through this (https://docs.github.com/en/pages/quickstart). First make sure you have a GitHub account, create a reposotory called "your username".github.io and initialize the repository with a README. Next go into the settings and go to the "Code and automation" section in the sidebar and select the pages section. From there select **Deploy from a branch** under source and select your main branch under the branch setting. Now any time we commit to this branch, it will update our site. Type your repositorys name in the url bar to see if github pages has been set up correctly.
+GitHub Pages is simple to set up. I will be following the official instructions to walk you through this (https://docs.github.com/en/pages/quickstart). First, make sure you have a GitHub account, create a repository called "your username".github.io, and initialize the repository with a README. Next, go into the settings and navigate to the "Code and automation" section in the sidebar, then select the Pages section. From there, select **Deploy from a branch** under Source and choose your main branch under the branch setting. Now, any time we commit to this branch, it will update our site. Type your repository's name in the URL bar to see if GitHub Pages has been set up correctly.
 
-![[2025-10-07-120339_1017x805_scrot.png]]
+![](/images/2025-10-07-120339_1017x805_scrot)
 
 Hugo needs specific changes to work with GitHub pages (https://gohugo.io/host-and-deploy/host-on-github-pages/). In the site configuration, add the following to the end (for Blowfish its in config/\_default/config.toml): 
 
@@ -319,6 +319,6 @@ Now we can commit all our changes to the repo and the site should automatically 
 
 ## Results
 
-After you commit to the repo you should have a Hugo site which can be updated from our Obsidian Vault. This has been my first blog post written using this pipeline and it makes a massive difference. Not only has this been fun to write, but its also been incredibly easy. Automatically seeing the formatted changes gives me more freedom on some design decisions and makes storing these blog posts so much easier.
+After you commit to the repo, you should have a Hugo site that can be updated from our Obsidian Vault. This has been my first blog post written using this pipeline, and it makes a massive difference. Not only has this been fun to write, but it's also been incredibly easy. Automatically seeing the formatted changes gives me more freedom in some design decisions and makes storing these blog posts much easier.
 
-I hope you've enjoyed setting this us and learnt a lot :)
+I hope you've enjoyed setting this up and learnt a lot in the process :)
