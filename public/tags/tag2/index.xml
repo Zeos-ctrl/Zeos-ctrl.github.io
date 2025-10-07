@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tag2 on My Portfolio</title>
+    <link>http://localhost:36307/tags/tag2/</link>
+    <description>Recent content in Tag2 on My Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
+    <webMaster>connor.bryan@zeos.system (Connor Bryan)</webMaster>
+    <copyright>&amp;copy; 2025 Connor Bryan. All Rights Reserved</copyright>
+    <lastBuildDate>Mon, 06 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:36307/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Making a Tech Blog using Hugo and Obsidian</title>
+      <link>http://localhost:36307/posts/making-a-tech-blog-using-hugo-and-obsidian/</link>
+      <pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate>
+      <author>connor.bryan@zeos.system (Connor Bryan)</author>
+      <guid>http://localhost:36307/posts/making-a-tech-blog-using-hugo-and-obsidian/</guid>
+      <description>&lt;p&gt;This is some example content for the blog.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
