@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tag1 on My Portfolio</title>
-    <link>http://localhost:36307/tags/tag1/</link>
+    <link>http://localhost:1313/tags/tag1/</link>
     <description>Recent content in Tag1 on My Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
     <webMaster>connor.bryan@zeos.system (Connor Bryan)</webMaster>
     <copyright>&amp;copy; 2025 Connor Bryan. All Rights Reserved</copyright>
-    <lastBuildDate>Mon, 06 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:36307/tags/tag1/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/tag1/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Making a Tech Blog using Hugo and Obsidian</title>
-      <link>http://localhost:36307/posts/making-a-tech-blog-using-hugo-and-obsidian/</link>
+      <link>http://localhost:1313/posts/making-a-tech-blog-using-hugo-and-obsidian/</link>
       <pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate>
       <author>connor.bryan@zeos.system (Connor Bryan)</author>
-      <guid>http://localhost:36307/posts/making-a-tech-blog-using-hugo-and-obsidian/</guid>
-      <description>&lt;p&gt;This is some example content for the blog.&lt;/p&gt;</description>
+      <guid>http://localhost:1313/posts/making-a-tech-blog-using-hugo-and-obsidian/</guid>
+      <description>&lt;p&gt;For a while I&amp;rsquo;ve wanted to start a blog to share my ideas and try to articulate what I&amp;rsquo;ve learnt. Before this iteration of the blog i tried using a template yaml file within JS to create blog posts. This approach was terrible, it was hard to see any syntax or even format it properly afterwards, sometimes its better to use already developed tools and technqiues. Thats where i found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post i will be going over the steps i took to create this blog, and hopefully inspire you to create one as its so easy to acheive.&lt;/p&gt;</description>
       
     </item>
     
