@@ -2,7 +2,7 @@ disabled = false
 languageCode = "en"
 languageName = "English"
 weight = 1
-title = "My Portfolio"
+title = "Connor Bryan"
 
 [params]
   displayName = "EN"
@@ -11,7 +11,7 @@ title = "My Portfolio"
   dateFormat = "2 January 2006"
   logo = "img/logo.png"
   # secondaryLogo = "img/secondary-logo.png"
-  description = "My awesome website"
+  description = "My portfolio site"
   copyright = "&copy; 2025 Connor Bryan. All Rights Reserved"
 
 [params.author]
@@ -19,7 +19,7 @@ title = "My Portfolio"
   email = "connor.bryan@zeos.system"
   image = "connor.webp"
   imageQuality = 96
-  headline = "I don't know what i'm doing."
+  headline = "Keep learning awesome stuff."
   bio = "BSc in Computer Security - MSc in Data-Intensive Physics - Head of Engineering (Tribela)"
   links = [
      { email = "mailto:connor.bryan@zeos.systems" },

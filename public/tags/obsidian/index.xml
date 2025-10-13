@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Obsidian on My Portfolio</title>
+    <title>Obsidian on Connor Bryan</title>
     <link>http://localhost:1313/tags/obsidian/</link>
-    <description>Recent content in Obsidian on My Portfolio</description>
+    <description>Recent content in Obsidian on Connor Bryan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
@@ -17,7 +17,7 @@
       <pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate>
       <author>connor.bryan@zeos.system (Connor Bryan)</author>
       <guid>http://localhost:1313/posts/making-a-tech-blog-using-hugo-and-obsidian/</guid>
-      <description>&lt;p&gt;For a while I&amp;rsquo;ve wanted to start a blog to share my ideas and try to articulate what I&amp;rsquo;ve learnt. Before this iteration of the blog i tried using a template yaml file within JS to create blog posts. This approach was terrible, it was hard to see any syntax or even format it properly afterwards, sometimes its better to use already developed tools and technqiues. Thats where i found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post i will be going over the steps i took to create this blog, and hopefully inspire you to create one as its so easy to acheive.&lt;/p&gt;</description>
+      <description>&lt;p&gt;For a while, I&amp;rsquo;ve wanted to start a blog to share my ideas and try to articulate what I&amp;rsquo;ve learned. Before this iteration of the blog, I tried using a template YAML file within JavaScript to create blog posts. This approach was terrible; it was hard to see any syntax or even format it properly afterward. Sometimes, it&amp;rsquo;s better to use already developed tools and techniques. That&amp;rsquo;s where I found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the Markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post, I will go over the steps I took to create this blog, and hopefully inspire you to create one as it&amp;rsquo;s so easy to achieve.&lt;/p&gt;</description>
       
     </item>
     

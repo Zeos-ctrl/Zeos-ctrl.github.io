@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gravitational_waves on Connor Bryan</title>
+    <link>http://localhost:1313/tags/gravitational_waves/</link>
+    <description>Recent content in Gravitational_waves on Connor Bryan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
+    <webMaster>connor.bryan@zeos.system (Connor Bryan)</webMaster>
+    <copyright>&amp;copy; 2025 Connor Bryan. All Rights Reserved</copyright>
+    <lastBuildDate>Mon, 13 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/gravitational_waves/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Making A Gravitational Waveform Generator Using Machine Learning</title>
+      <link>http://localhost:1313/posts/making-a-gravitational-waveform-generator-using-machine-learning/</link>
+      <pubDate>Mon, 13 Oct 2025 00:00:00 +0000</pubDate>
+      <author>connor.bryan@zeos.system (Connor Bryan)</author>
+      <guid>http://localhost:1313/posts/making-a-gravitational-waveform-generator-using-machine-learning/</guid>
+      <description>&lt;p&gt;During the course of my Master&amp;rsquo;s degree in Data Intensive Physics, I spent my time learning how machine learning algorithms work and how to analyze gravitational wave signals. The main way we analyzed the data from gravitational waves was to do parameter estimation to try and estimate some of the parameters of the black holes that merged to create the waveform. During my &amp;lsquo;Observational Gravitational Wave Astronomy&amp;rsquo; module, this culminated in a final project where we used Markov Chain Monte Carlo methods to estimate the parameters of GW150914, which was the first detected signal. This analysis consisted of using a surrogate generator (a program to generate a waveform), overlapping the generated waveform with the detected signal, measuring how similar they are, and repeating this process until we find the best match between the generated and measured signals. As you could probably tell, one of the bottlenecks in this system is the generation of the waveforms. There are multiple waveform families, which I won&amp;rsquo;t go into in this post, but the main ones we looked at are Inspiral-Merger-Ringdown Phenomenological models (IMRPhenom) and Effective-One-Body models (EOB). These models simulate the same merger but use different mathematics to accomplish that. The IMR waveforms are less accurate but faster to generate, while the EOB models are more accurate but take a lot longer to produce. To overcome the generation time constraint, researchers generate &amp;ldquo;Waveform banks,&amp;rdquo; which are precomputed waveforms that can be used within parameter estimation pipelines. These waveform banks typically contain 100,000 to 1,000,000 signals, making them large and time-consuming to generate.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
