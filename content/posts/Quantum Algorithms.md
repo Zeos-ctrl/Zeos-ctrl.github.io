@@ -2,6 +2,8 @@
 tags:
   - quantum
   - algorithms
+title: Quantum Algorithms
+date: 2025-11-18
 ---
 # Introduction to Quantum Computing
 
@@ -290,7 +292,7 @@ Counter({1: 52, 0: 48})
 
 From the measurement outcome, we see that Alice has transmitted the equal superposition state to Bob.
 
-## Quantum Random Number Generator
+# Quantum Random Number Generator
 
 Quantum systems are inherently non-deterministic, as such they become better generators for true random numbers as they do not rely on an initial seed. The following is an illustration of a random integer number generator routine using multiple qubits:
 
@@ -368,7 +370,7 @@ Output:
 
 We are given 10 random numbers as outputs between our upper and lower bounds.
 
-## Deutsch-Jozsa Algorithm
+# Deutsch-Jozsa Algorithm
 
 The Deutsch-Jozsa algorithm determines if a function is balanced, meaning the function responds with exactly half of the outputs being a 1 and the other half being a 0, or constant if the function responds with 100% 1s or 0s. This problem was designed to prove that quantum computers could provide an exponential speed-up over their classical, deterministic counterparts.
 
@@ -563,7 +565,7 @@ From the output we can see that Grover's algorithm has converged to the winner w
 
 The main advantage of this over a classical search algorithm is in quantum parallelisation. We can put all N items into a superposition simultaneously, and when we apply the oracle, it evaluates all N items simultaneously in that superposition. 
 
-## Conclusion
+# Conclusion
 
 We have seen some background to quantum computing as well as some examples of quantum algorithms. The true promise of quantum computing is quantum parallelisation, as we saw in the Grovers algorithm example.
 
