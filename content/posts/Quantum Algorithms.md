@@ -574,3 +574,5 @@ We have seen some background to quantum computing as well as some examples of qu
 The Deutsch-Jozsa and Grover's algorithms represent the paradigm shift that quantum computing offers. Rather than checking possibilities sequentially as classical computers must, these algorithms leverage quantum superposition to evaluate multiple inputs simultaneously, then use interference (constructive and destructive) to amplify correct answers while suppressing incorrect ones. The Deutsch-Jozsa algorithm achieves this in a single query with 100% certainty, while Grover's algorithm provides a quadratic speedup for unstructured search, requiring only √N operations instead of N.
 
 While we're still years away from having quantum computers in our homes, and current applications remain limited to specific problem domains, the theoretical foundations and simulation tools like Cirq and Qiskit allow us to  prepare for the quantum future.
+
+I've created a GitHub repository with some notebooks with example code in them from the Quantum Machine Learning With Python textbook im using, found at https://github.com/Zeos-ctrl/QuantumMachineLearning
