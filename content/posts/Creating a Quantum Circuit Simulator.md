@@ -1,9 +1,8 @@
 ---
-title: Blog post
+title: Creating a Quantum Circuit Simulator
 date: 2025-12-03
 draft: false
 tags:
-  - blog
   - quantum
   - rust
 ---
