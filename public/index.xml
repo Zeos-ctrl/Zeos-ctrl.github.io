@@ -9,7 +9,33 @@
     <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
     <webMaster>connor.bryan@zeos.system (Connor Bryan)</webMaster>
     <copyright>&amp;copy; 2025 Connor Bryan. All Rights Reserved</copyright>
-    <lastBuildDate>Mon, 13 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 03 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Creating a Quantum Circuit Simulator</title>
+      <link>http://localhost:1313/posts/creating-a-quantum-circuit-simulator/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <author>connor.bryan@zeos.system (Connor Bryan)</author>
+      <guid>http://localhost:1313/posts/creating-a-quantum-circuit-simulator/</guid>
+      <description>&lt;p&gt;
+
+Recently, I&amp;rsquo;ve been researching quantum mechanics, especially around quantum computing and I&amp;rsquo;ve been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a language  I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Quantum Algorithms</title>
+      <link>http://localhost:1313/posts/quantum-algorithms/</link>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate>
+      <author>connor.bryan@zeos.system (Connor Bryan)</author>
+      <guid>http://localhost:1313/posts/quantum-algorithms/</guid>
+      <description>&lt;p&gt;{{&amp;lt; katex &amp;gt;}}
+Recently I picked up a textbook in Quantum Machine learning with python as it sounded interesting, and after finishing my Msc in Physics i felt like now was the time to get into it. In the textbook the author introduces the &amp;ldquo;Qubit&amp;rdquo;, a probabilistic bit that can be either a 1, 0 or a superposition between the two. Think of Schrodinger cat; The cat is either alive or dead, but until you open the box it is in a mixture of the two states. These quantum effects are what give us the phenomena of the double slit experiment where electrons can seem to go through both holes at once and there is a great video explaining this by Veritasium on YouTube (&lt;a
+  href=&#34;https://www.youtube.com/watch?v=qJZ1Ez28C-A%29&#34;
+    target=&#34;_blank&#34;
+  &gt;https://www.youtube.com/watch?v=qJZ1Ez28C-A)&lt;/a&gt;.&lt;/p&gt;</description>
+      
+    </item>
     
     <item>
       <title>Making A Gravitational Waveform Generator Using Machine Learning</title>
@@ -17,7 +43,9 @@
       <pubDate>Mon, 13 Oct 2025 00:00:00 +0000</pubDate>
       <author>connor.bryan@zeos.system (Connor Bryan)</author>
       <guid>http://localhost:1313/posts/making-a-gravitational-waveform-generator-using-machine-learning/</guid>
-      <description>&lt;p&gt;During the course of my Master&amp;rsquo;s degree in Data Intensive Physics, I spent my time learning how machine learning algorithms work and how to analyze gravitational wave signals. The main way we analyzed the data from gravitational waves was to do parameter estimation to try and estimate some of the parameters of the black holes that merged to create the waveform. During my &amp;lsquo;Observational Gravitational Wave Astronomy&amp;rsquo; module, this culminated in a final project where we used Markov Chain Monte Carlo methods to estimate the parameters of GW150914, which was the first detected signal. This analysis consisted of using a surrogate generator (a program to generate a waveform), overlapping the generated waveform with the detected signal, measuring how similar they are, and repeating this process until we find the best match between the generated and measured signals. As you could probably tell, one of the bottlenecks in this system is the generation of the waveforms. There are multiple waveform families, which I won&amp;rsquo;t go into in this post, but the main ones we looked at are Inspiral-Merger-Ringdown Phenomenological models (IMRPhenom) and Effective-One-Body models (EOB). These models simulate the same merger but use different mathematics to accomplish that. The IMR waveforms are less accurate but faster to generate, while the EOB models are more accurate but take a lot longer to produce. To overcome the generation time constraint, researchers generate &amp;ldquo;Waveform banks,&amp;rdquo; which are precomputed waveforms that can be used within parameter estimation pipelines. These waveform banks typically contain 100,000 to 1,000,000 signals, making them large and time-consuming to generate.&lt;/p&gt;</description>
+      <description>&lt;p&gt;
+
+During the course of my Master&amp;rsquo;s degree in Data Intensive Physics, I spent my time learning how machine learning algorithms work and how to analyze gravitational wave signals. The main way we analyzed the data from gravitational waves was to do parameter estimation to try and estimate some of the parameters of the black holes that merged to create the waveform. During my &amp;lsquo;Observational Gravitational Wave Astronomy&amp;rsquo; module, this culminated in a final project where we used Markov Chain Monte Carlo methods to estimate the parameters of GW150914, which was the first detected signal. This analysis consisted of using a surrogate generator (a program to generate a waveform), overlapping the generated waveform with the detected signal, measuring how similar they are, and repeating this process until we find the best match between the generated and measured signals. As you could probably tell, one of the bottlenecks in this system is the generation of the waveforms. There are multiple waveform families, which I won&amp;rsquo;t go into in this post, but the main ones we looked at are Inspiral-Merger-Ringdown Phenomenological models (IMRPhenom) and Effective-One-Body models (EOB). These models simulate the same merger but use different mathematics to accomplish that. The IMR waveforms are less accurate but faster to generate, while the EOB models are more accurate but take a lot longer to produce. To overcome the generation time constraint, researchers generate &amp;ldquo;Waveform banks,&amp;rdquo; which are precomputed waveforms that can be used within parameter estimation pipelines. These waveform banks typically contain 100,000 to 1,000,000 signals, making them large and time-consuming to generate.&lt;/p&gt;</description>
       
     </item>
     
@@ -117,7 +145,11 @@
       <pubDate>Mon, 06 Oct 2025 00:00:00 +0000</pubDate>
       <author>connor.bryan@zeos.system (Connor Bryan)</author>
       <guid>http://localhost:1313/posts/making-a-tech-blog-using-hugo-and-obsidian/</guid>
-      <description>&lt;p&gt;For a while, I&amp;rsquo;ve wanted to start a blog to share my ideas and try to articulate what I&amp;rsquo;ve learned. Before this iteration of the blog, I tried using a template YAML file within JavaScript to create blog posts. This approach was terrible; it was hard to see any syntax or even format it properly afterward. Sometimes, it&amp;rsquo;s better to use already developed tools and techniques. That&amp;rsquo;s where I found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the Markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post, I will go over the steps I took to create this blog, and hopefully inspire you to create one as it&amp;rsquo;s so easy to achieve.&lt;/p&gt;</description>
+      <description>&lt;p&gt;{{&amp;lt; katex &amp;gt;}}
+For a while, I&amp;rsquo;ve wanted to start a blog to share my ideas and try to articulate what I&amp;rsquo;ve learned. Before this iteration of the blog, I tried using a template YAML file within JavaScript to create blog posts. This approach was terrible; it was hard to see any syntax or even format it properly afterward. Sometimes, it&amp;rsquo;s better to use already developed tools and techniques. That&amp;rsquo;s where I found an amazing video by NetworkChuck about setting up a content pipeline using Obsidian to create the Markdown files for a blog, and using a templater such as Hugo to turn them into pretty webpages like the one you are reading now. In this post, I will go over the steps I took to create this blog, and hopefully inspire you to create one as it&amp;rsquo;s so easy &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/dnE7c0ELEH8?autoplay=0&amp;amp;controls=1&amp;amp;end=0&amp;amp;loop=0&amp;amp;mute=0&amp;amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&gt;&lt;/iframe&gt;
+    &lt;/div&gt;
+E7c0ELEH8 &amp;gt;}}&lt;/p&gt;</description>
       
     </item>
     

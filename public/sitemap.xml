@@ -4,18 +4,30 @@
 
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-10-13T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:1313/posts/making-a-gravitational-waveform-generator-using-machine-learning/</loc>
-    <lastmod>2025-10-13T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/posts/creating-a-quantum-circuit-simulator/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-12-03T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://localhost:1313/posts/quantum-algorithms/</loc>
+    <lastmod>2025-11-18T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://localhost:1313/posts/making-a-gravitational-waveform-generator-using-machine-learning/</loc>
     <lastmod>2025-10-13T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rust on Connor Bryan</title>
+    <link>http://localhost:1313/tags/rust/</link>
+    <description>Recent content in Rust on Connor Bryan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
+    <webMaster>connor.bryan@zeos.system (Connor Bryan)</webMaster>
+    <copyright>&amp;copy; 2025 Connor Bryan. All Rights Reserved</copyright>
+    <lastBuildDate>Wed, 03 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/rust/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Creating a Quantum Circuit Simulator</title>
+      <link>http://localhost:1313/posts/creating-a-quantum-circuit-simulator/</link>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <author>connor.bryan@zeos.system (Connor Bryan)</author>
+      <guid>http://localhost:1313/posts/creating-a-quantum-circuit-simulator/</guid>
+      <description>&lt;p&gt;
+
+Recently, I&amp;rsquo;ve been researching quantum mechanics, especially around quantum computing and I&amp;rsquo;ve been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a language  I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts;&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

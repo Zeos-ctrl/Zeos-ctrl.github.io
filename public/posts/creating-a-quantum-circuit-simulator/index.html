@@ -1,0 +1,1864 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="dark"
+  data-auto-appearance="false"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  <title>Creating a Quantum Circuit Simulator &middot; Connor Bryan</title>
+    <meta name="title" content="Creating a Quantum Circuit Simulator &middot; Connor Bryan">
+
+  
+  <meta name="description" content="My portfolio site">
+  <meta name="keywords" content="quantum,rust,">
+  
+  
+  <link rel="canonical" href="http://localhost:1313/posts/creating-a-quantum-circuit-simulator/">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.2e2ef086cdbb7dd91b490025ac5506203b633e68fd79d804ec748050a0807950c8f504cd47afa4e9ac8a0c9930d9869c082ea413535fca2239d37c78d6b39d31.css"
+    integrity="sha512-Li7whs27fdkbSQAlrFUGIDtjPmj9edgE7HSAUKCAeVDI9QTNR6&#43;k6ayKDJkw2YacCC6kE1NfyiI503x41rOdMQ==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.516a16745bea5a9bd011138d254cc0fd3973cd55ce6e15f3dec763e7c7c2c7448f8fe7b54cca811cb821b0c7e12cd161caace1dd794ac3d34d40937cbcc9ee12.js"
+    integrity="sha512-UWoWdFvqWpvQERONJUzA/TlzzVXObhXz3sdj58fCx0SPj&#43;e1TMqBHLghsMfhLNFhyqzh3XlKw9NNQJN8vMnuEg=="></script>
+  
+  
+  
+  
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.a187118b41a60744310065c567365de85730c8495301d0ebae41810cc6f7a47432b1de7d4f3b11338959f1ac50c266be6b4b73acf6bf770016eb59b602cc1aa0.js"
+      integrity="sha512-oYcRi0GmB0QxAGXFZzZd6FcwyElTAdDrrkGBDMb3pHQysd59TzsRM4lZ8axQwma&#43;a0tzrPa/dwAW61m2AswaoA=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/creating-a-quantum-circuit-simulator/">
+  <meta property="og:site_name" content="Connor Bryan">
+  <meta property="og:title" content="Creating a Quantum Circuit Simulator">
+  <meta property="og:description" content="Recently, I’ve been researching quantum mechanics, especially around quantum computing and I’ve been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a language I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts;">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-12-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-03T00:00:00+00:00">
+    <meta property="article:tag" content="Quantum">
+    <meta property="article:tag" content="Rust">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Creating a Quantum Circuit Simulator">
+  <meta name="twitter:description" content="Recently, I’ve been researching quantum mechanics, especially around quantum computing and I’ve been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a language I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts;">
+
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Creating a Quantum Circuit Simulator",
+    "headline": "Creating a Quantum Circuit Simulator",
+    
+    "abstract": "\u003cp\u003e\n\nRecently, I\u0026rsquo;ve been researching quantum mechanics, especially around quantum computing and I\u0026rsquo;ve been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a language  I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts;\u003c\/p\u003e",
+    "inLanguage": "en",
+    "url" : "http:\/\/localhost:1313\/posts\/creating-a-quantum-circuit-simulator\/",
+    "author" : {
+      "@type": "Person",
+      "name": "Connor Bryan"
+    },
+    "copyrightYear": "2025",
+    "dateCreated": "2025-12-03T00:00:00\u002b00:00",
+    "datePublished": "2025-12-03T00:00:00\u002b00:00",
+    
+    "dateModified": "2025-12-03T00:00:00\u002b00:00",
+    
+    "keywords": ["quantum","rust"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "4279"
+  }]
+  </script>
+
+
+
+  
+  
+    <meta name="author" content="Connor Bryan">
+  
+  
+    
+      
+        
+      
+    
+      
+        
+          <link href="https://github.com/Zeos-ctrl" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://linkedin.com/in/connor-bryan-oxford" rel="me">
+        
+      
+    
+  
+
+  
+  
+
+<script src="/lib/jquery/jquery.slim.min.b0dca576e87d7eaa5850ae4e61759c065786cdb6489d68fcc82240539eebd5da522bdb4fda085ffd245808c8fe2acb2516408eb774ef26b5f6015fc6737c0ea8.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj&#43;KsslFkCOt3TvJrX2AV/Gc3wOqA=="></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/lib/katex/katex.min.7e7e35e3ef02b7b437449a44ca3fac62ec1ed39cb8312b680a00fe8ac60badc95b063b694636b8440856f7f5e8c2cc9e6b0efb581179b2656c7e1e97558c7096.css"
+    integrity="sha512-fn414&#43;8Ct7Q3RJpEyj&#43;sYuwe05y4MStoCgD&#43;isYLrclbBjtpRja4RAhW9/Xowsyeaw77WBF5smVsfh6XVYxwlg==">
+  
+  
+  
+  <script
+    defer
+    type="text/javascript"
+    src="/js/katex.bundle.735b6f1542c0acf03d492dcdf14710c2e277474a64ae8ce49ef56563e17d142f9d3f4466e82cf12679968f50985628e08948ec341fba2df746545d0fd337d81d.js"
+    integrity="sha512-c1tvFULArPA9SS3N8UcQwuJ3R0pkrozknvVlY&#43;F9FC&#43;dP0Rm6CzxJnmWj1CYVijgiUjsNB&#43;6LfdGVF0P0zfYHQ=="
+    id="katex-render"></script>
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+    <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false},
+        {left: "\\[", right: "\\]", display: true},
+        {left: "\\(", right: "\\)", display: false}
+      ],
+      throwOnError: false
+    });
+  });
+</script>
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+<body
+    class="flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32 scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        Skip to main content
+      </a>
+    </div>
+    
+    
+      <div class="min-h-[148px]"></div>
+<div class="fixed inset-x-0 pl-[24px] pr-[24px] z-100">
+  <div
+    id="menu-blur"
+    class="absolute opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom bg-neutral dark:bg-neutral-800"></div>
+  <div class="relative max-w-[64rem] ml-auto mr-auto">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div
+  class="main-menu flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start gap-x-3 pt-[2px] pr-0 pb-[3px] pl-0">
+  
+  
+    
+    
+
+  <div class="flex flex-1 items-center justify-between">
+    <nav class="flex space-x-3">
+      
+        <a href="/" class="text-base font-medium">
+          Connor Bryan
+        </a>
+      
+    </nav>
+    
+  <nav class="hidden md:flex items-center gap-x-5 md:ml-12 h-12">
+    
+      
+        
+  <a
+  href="/"
+  
+  class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Connor Bryan">
+    Home
+  </p>
+</a>
+
+
+
+      
+        
+  <a
+  href="/about/"
+  
+  class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="About">
+    About
+  </p>
+</a>
+
+
+
+      
+        
+  <a
+  href="/posts/"
+  
+  class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Posts">
+    Blog
+  </p>
+</a>
+
+
+
+      
+        
+  <a
+  href="/resume/"
+  
+  class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Resume">
+    Resume
+  </p>
+</a>
+
+
+
+      
+    
+
+    
+
+    
+
+    
+      <button
+        id="search-button"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      </button>
+    
+
+    
+      <div class=" flex items-center">
+        <button
+          id="appearance-switcher"
+          aria-label="Dark mode switcher"
+          type="button"
+          class="text-base hover:text-primary-600 dark:hover:text-primary-400">
+          <div class="flex items-center justify-center dark:hidden">
+            <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+          </div>
+          <div class="items-center justify-center hidden dark:flex">
+            <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+          </div>
+        </button>
+      </div>
+    
+  </nav>
+
+    
+  <div class="flex md:hidden items-center gap-x-5 md:ml-12 h-12">
+    <span></span>
+
+    
+
+    
+
+    
+      <button
+        id="search-button-mobile"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      </button>
+    
+
+    
+      <button
+        id="appearance-switcher-mobile"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400 me-1">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    
+  </div>
+
+  </div>
+  
+  <div class="-my-2 md:hidden">
+    <div id="menu-button" class="block">
+      
+        <div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+</span>
+        </div>
+        <div
+          id="menu-wrapper"
+          class="fixed inset-0 z-30 invisible w-screen h-screen m-0 overflow-auto transition-opacity opacity-0 cursor-default bg-neutral-100/50 backdrop-blur-sm dark:bg-neutral-900/50 pt-[5px]">
+          <ul
+            class="flex space-y-2 mt-3 flex-col items-end w-full px-6 py-6 mx-auto overflow-visible list-none text-end max-w-7xl">
+            <li id="menu-close-button">
+              <span
+                class="cursor-pointer inline-block align-text-bottom hover:text-primary-600 dark:hover:text-primary-400">
+                <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+              </span>
+            </li>
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/"
+    
+    class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Connor Bryan">
+      Home
+    </p>
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/about/"
+    
+    class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="About">
+      About
+    </p>
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/posts/"
+    
+    class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Posts">
+      Blog
+    </p>
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/resume/"
+    
+    class="flex items-center hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Resume">
+      Resume
+    </p>
+  </a>
+</li>
+
+
+
+            
+
+          </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+</div>
+
+
+<script
+  type="text/javascript"
+  src="/js/background-blur.min.00a57c73ea12f2cab2980c3c3d649e89f6d82f190f74bbe2b67f2f5e39ab7d032ece47086400ca05396758aace13299da49aca43ea643d2625e62c506267a169.js"
+  integrity="sha512-AKV8c&#43;oS8sqymAw8PWSeifbYLxkPdLvitn8vXjmrfQMuzkcIZADKBTlnWKrOEymdpJrKQ&#43;pkPSYl5ixQYmehaQ=="
+  data-blur-id="menu-blur"></script>
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  <article>
+    
+    
+      
+      
+      
+      
+        
+  
+    
+      
+    
+  
+
+
+
+    <div id="hero" class="h-[150px] md:h-[200px]"></div>
+  
+  <div class="fixed inset-x-0 top-0 h-[800px] single_hero_background nozoom">
+    
+    
+      
+    
+    <img
+      id="background-image"
+      src="/background_hu_3dc09cfbecf9d4ac.jpg"
+      alt="Background Image"
+      class="absolute inset-0 w-full h-full object-cover">
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-neutral dark:from-neutral-800 to-transparent mix-blend-normal"></div>
+    <div
+      class="absolute inset-0 opacity-60 bg-gradient-to-t from-neutral dark:from-neutral-800 to-neutral-100 dark:to-neutral-800 mix-blend-normal"></div>
+  </div>
+
+  
+    <div
+      id="background-blur"
+      class="fixed opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom backdrop-blur-2xl"></div>
+    
+    
+    <script
+      type="text/javascript"
+      src="/js/background-blur.min.00a57c73ea12f2cab2980c3c3d649e89f6d82f190f74bbe2b67f2f5e39ab7d032ece47086400ca05396758aace13299da49aca43ea643d2625e62c506267a169.js"
+      integrity="sha512-AKV8c&#43;oS8sqymAw8PWSeifbYLxkPdLvitn8vXjmrfQMuzkcIZADKBTlnWKrOEymdpJrKQ&#43;pkPSYl5ixQYmehaQ=="
+      data-blur-id="background-blur"
+      data-image-id="background-image"
+      data-image-url="/background.jpg"></script>
+  
+      
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Creating a Quantum Circuit Simulator
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+
+  
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2025-12-03T00:00:00&#43;00:00">3 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span>4279 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">21 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+  
+
+  
+  
+    <div class="flex flex-row flex-wrap items-center">
+      
+        
+      
+        
+          
+        
+      
+        
+      
+        
+          
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/quantum/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Quantum
+  </span>
+</span>
+
+              </a>
+            
+              <a class="relative mt-[0.5rem] me-2" href="/tags/rust/">
+                <span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Rust
+  </span>
+</span>
+
+              </a>
+            
+          
+        
+      
+    </div>
+  
+
+  
+  
+
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+    
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+        
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="Connor Bryan"
+        src="/connor_hu_cbe9ce57da1280c1.webp">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Connor Bryan
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">BSc in Computer Security - MSc in Data-Intensive Physics - Head of Engineering (Tribela)</div>
+    
+    <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="mailto:connor.bryan@zeos.systems"
+          target="_blank"
+          aria-label="Email"
+          title="Email"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/Zeos-ctrl"
+          target="_blank"
+          aria-label="Github"
+          title="Github"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://linkedin.com/in/connor-bryan-oxford"
+          target="_blank"
+          aria-label="Linkedin"
+          title="Linkedin"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+</span></span></a
+        >
+      
+    
+  </div>
+
+</div>
+  </div>
+</div>
+
+  
+
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          <p>
+
+Recently, I&rsquo;ve been researching quantum mechanics, especially around quantum computing and I&rsquo;ve been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a language  I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts;</p>
+<ol>
+<li>A representation of complex numbers</li>
+<li>The quantum state representation that will be updated throughout the circuit</li>
+<li>A circuit struct to hold all the gates in order that will be applied to the state</li>
+<li>A simulator that will apply those gates step by step to the state and return the result</li>
+</ol>
+<p>To top this all off, I decided to add a further restriction of using as few external libraries as possible.</p>
+
+<h1 class="relative group">Qubit representation 
+    <div id="qubit-representation" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#qubit-representation" aria-label="Anchor">#</a>
+    </span>        
+    
+</h1>
+<p>In its most basic form, a quantum computer measures the change of the state of a quantum bit over the evolution of the circuit. In classical computing a bit is the most fundamental unit of information and is represented as a &ldquo;1&rdquo; or &ldquo;0&rdquo;. The quantum counterpart of this classical unit is a quantum bit, or qubit, which can be represented in the same way as the classical bit but with the added dimension of superposition where it can be both a &ldquo;1&rdquo; and &ldquo;0&rdquo; at the same time.</p>
+<p>In quantum mechanics the states corresponding to &ldquo;1&rdquo; and &ldquo;0&rdquo; are two-dimensional state vectors $\vec{0}$ and $\vec{1}$ where $\vec{0} = \begin{bmatrix}1\\0\end{bmatrix}$ and $\vec{1} = \begin{bmatrix}0\\1\end{bmatrix}$. A superposition of the states is represented as the linear combination of these two states being $\ket{\psi} = \alpha\ket{0} + \beta\ket{1}$. This may look complicated however lets imagine those two state vectors represent directions on a 2D graph where, $\ket{0}$ is the X axis and $\ket{1}$ is the Y axis. The overall state is the direction in which the sum of the two vectors is. Lets say we have a value of 0.5 in the x axis and 0.5 in the y axis, imagine travelling 0.5 units in the x axis and then the y axis, now from that position return to the origin and we have found the sum of these two vectors, now the ratio between the angle of that sum and the axis is the probability of the qubit being in state 0 or 1 which in this case is 50/50. If we travelled 1 unit in the X axis and 0 in the Y axis the state would be 0 with 100% probability. If we extend this idea to include a Z axis we would end up with the Bloch sphere representation of the qubit.</p>
+<p>So as we have just seen we can represent a qubit as a complex number, this means to start coding this simulator in rust we need a struct for a complex number to represent each qubit. This is quite easy as we can create a struct called Complex and have two properties of real and imaginary to represent the number. We store the values as f64 as a 64-bit floating point number as the multiplier is usually a fraction such as $\frac{1}{\sqrt{2}}$ as we will see a bit later.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// Complex number representation, these are the representation
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// of Qubits within the circuit.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="cp">#[derive(Debug, Clone, Copy, PartialEq)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Real part to the number
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">real</span>: <span class="kt">f64</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Imaginary part of the number
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">imag</span>: <span class="kt">f64</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Our complex number struct needs to do more than just hold the values of the qubit, we also need to do math on it. As such we implement the following functions;</p>
+<ol>
+<li>We need a constructor for the struct which we call <code>new</code> and this takes in the real and imaginary part of the number.</li>
+<li>The add function calculates the sum between two complex numbers and returns a third.</li>
+<li>The subtract function does the opposite of the add function.</li>
+<li>The multiply function calculates the product between two complex numbers.</li>
+<li>The scale function multiplies the complex number by a scalar.</li>
+<li>The magnitude squared function is possibly the most important one and is used to calculate the probability of the qubit in the state vector.</li>
+<li>The conjugate function is used to calculate the complex conjugate of the qubit and is used in certain gates as a flip operator.</li>
+<li>Finally the exp calculates the complex exponential of the complex number and is used in the quantum Fourier transform circuit.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">impl</span><span class="w"> </span><span class="n">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Creates a new complex number with the specified real and
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// imaginary counterparts.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">new</span><span class="p">(</span><span class="n">real</span>: <span class="kt">f64</span><span class="p">,</span><span class="w"> </span><span class="n">imag</span>: <span class="kt">f64</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Addition operation between two complex numbers.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num1 = a + bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num2 = c + di 
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// result = (a + c) + (b + d)i
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">add</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">other</span>: <span class="kp">&amp;</span><span class="nc">Complex</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Subtraction operation between two complex numbers.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num1 = a + bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num2 = c + di 
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// result = (a - c) + (b - d)i
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">subtract</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">other</span>: <span class="kp">&amp;</span><span class="nc">Complex</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Multiplication operation between two complex numbers.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num1 = a + bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num2 = c + di 
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// result = (ac - bd) + (ad + bc)i
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">multiply</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">other</span>: <span class="kp">&amp;</span><span class="nc">Complex</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Scale the complex number by a scalar value.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num1 = a + bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// scalar = x
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// result = (x * a) + (x * b)i
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">scale</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">scalar</span>: <span class="kt">f64</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Calculate the magnitude squared of the complex number.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// Used to get the probability of the quantum state vector.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num1 = a + bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// result = |a|^2 + (|b|^2)i
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">magnitude_squared</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">f64</span> <span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Calculate the complex conjugate (flip the sign on the imaginary part)
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// num1 = a + bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// result = a - bi
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">conjugate</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Compute the complex exponential e^(a+bi)
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// Using Euler&#39;s formula: e^(a+bi) = e^a * (cos(b) + i*sin(b))
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">exp</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Complex</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">..</span><span class="p">.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Im leaving out some of the internals of the functions from brevity of this blog post, however if your interested, the link to the GitHub project will be at the bottom.</p>
+
+<h1 class="relative group">Quantum State 
+    <div id="quantum-state" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#quantum-state" aria-label="Anchor">#</a>
+    </span>        
+    
+</h1>
+<p>The quantum state vector stores all possible outcomes for an n-qubit system. For a 2-qubit system, when we perform a measurement and collapse the wave function, we could end up with one of 4 states: &ldquo;00&rdquo;, &ldquo;01&rdquo;, &ldquo;10&rdquo; or &ldquo;11&rdquo;. During the circuit when qubits are in superposition, we don&rsquo;t know what the measurement will yield. Each basis state has a corresponding complex amplitude stored in the state vector. The probability of measuring each state is calculated as the magnitude squared of its amplitude. The simulator uses this state vector to track how the quantum system transforms as gates are applied throughout the circuit.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="c1">// The Quantum State Vector that holds the state of the system for 2^n qubits
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#[derive(Clone)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">QuantumState</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">amplitudes</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Complex</span><span class="o">&gt;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">num_qubits</span>: <span class="kt">usize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>In this simulator we need a quantum state vector to hold the state of the system which will be transformed over the length of the circuit. For this struct we need the number of qubits in the system (used to calculate the length of the state vector), and the amplitudes of the system which is a vector of complex numbers.</p>
+<ol>
+<li>During the <code>new</code> function we initialise the system to have n qubits all in the state |0⟩. Specifically, we create a state vector of length 2^n, where the first amplitude is set to 1+0i (representing the |00&hellip;0⟩ state) and all other amplitudes are set to 0+0i. This function then returns the fresh state vector.</li>
+<li>We have a function called <code>normalize</code> to ensure the sum of all |amplitude|² equals 1. This maintains the fundamental requirement that all measurement probabilities must sum to 1. After certain operations (or due to floating-point errors), the state may need renormalization.</li>
+<li>The <code>measure</code> function implements probabilistic measurement. It calculates the probability for each basis state using |amplitude|², then picks a random value by choosing a random number between 0-1 and iterating over every state, accumulating their probabilities until the cumulative sum exceeds the generated random number. The basis state whose probability pushed the cumulative sum over the random number is the chosen &ldquo;winner&rdquo; which becomes the measurement outcome.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">impl</span><span class="w"> </span><span class="n">QuantumState</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Create state with n qubits, all in |0⟩
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">new</span><span class="p">(</span><span class="n">num_qubits</span>: <span class="kt">usize</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">QuantumState</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2_</span><span class="k">usize</span><span class="p">.</span><span class="n">pow</span><span class="p">(</span><span class="n">num_qubits</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u32</span><span class="p">);</span><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">amplitudes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span>::<span class="n">new</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">size</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">amplitudes</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">Complex</span>::<span class="n">new</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">amplitudes</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">Complex</span>::<span class="n">new</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">QuantumState</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">amplitudes</span><span class="p">,</span><span class="w"> </span><span class="n">num_qubits</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Ensure sum of all amplitudes in the Quantum State equal 1, |amplitude|² = 1
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">normalize</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Calculate sum of |amplitude|²
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">amplitude</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="n">amplitudes</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amplitude</span><span class="p">.</span><span class="n">magnitude_squared</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Handle edge case
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0.0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Can&#39;t normalize zero vector
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">f64</span>::<span class="n">sqrt</span><span class="p">(</span><span class="n">sum</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Scale each amplitude
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">amplitude</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">amplitudes</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="o">*</span><span class="n">amplitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">amplitude</span><span class="p">.</span><span class="n">scale</span><span class="p">(</span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">norm</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Measure all qubits, return bitstring (e.g., &#34;01&#34; for 2 qubits)
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">measure</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">String</span> <span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">rng</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span>::<span class="n">rng</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">r</span>: <span class="kt">f64</span> <span class="o">=</span><span class="w"> </span><span class="n">rng</span><span class="p">.</span><span class="n">random</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">cumulative</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">chosen_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Loop through amplitudes and find which index to measure
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">amplitude</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">enumerate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">cumulative</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amplitude</span><span class="p">.</span><span class="n">magnitude_squared</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">cumulative</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">chosen_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="k">break</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="fm">format!</span><span class="p">(</span><span class="s">&#34;</span><span class="si">{:0width$b}</span><span class="s">&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">chosen_index</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div>
+<h1 class="relative group">Required Gates 
+    <div id="required-gates" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#required-gates" aria-label="Anchor">#</a>
+    </span>        
+    
+</h1>
+<p>As a basic test for this circuit we want to create a bell state circuit. The bell state is a simple circuit to create entanglement between two qubits. Entanglement makes it so the two qubits are correlated - a measurement of one qubit will give you <strong>information</strong> about the other&rsquo;s state. Specifically, in this Bell state, if you measure the first qubit and get |0⟩, the second qubit will also be |0⟩; if you get |1⟩, the second will also be |1⟩. The Bell state is represented by $\ket{\psi} = \frac{1}{\sqrt{2}}\ket{00} + \frac{1}{\sqrt{2}}\ket{11}$. This circuit is simple (in quantum mechanical terms) and only requires two gates; the Hadamard gate to create a superposition in one of the qubits, and the controlled NOT gate to entangle the second qubit with the first one.</p>
+<p>In our circuit we treat gates as a queue of operations that are executed by the simulator, like a queue of people at a fast food restaurant. The gates are stored as a vector on enums where each enum variant has its own corresponding function. The enum variants are initialised with the information required for their function, for example, the Hadamard variant stores the target qubit index.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// Quantum gates supported by the simulator.
+</span></span></span><span class="line"><span class="cl"><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// All gates are represented with their target qubit index (0-indexed).
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// Multi-qubit gates like CNOT also specify control qubits.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="cp">#[derive(Debug, Clone, Copy)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">Gate</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Hadamard gate - creates superposition
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// Transforms |0⟩ → (1/√2)(|0⟩ + |1⟩) and |1⟩ → (1/√2)(|0⟩ - |1⟩)
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="n">Hadamard</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">target</span>: <span class="kt">usize</span> <span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Controlled-NOT gate - flips target if control is |1⟩
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="no">CNOT</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">control</span>: <span class="kt">usize</span><span class="p">,</span><span class="w"> </span><span class="n">target</span>: <span class="kt">usize</span> <span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>The Hadamard gate implementation takes the quantum state and the target qubit index as inputs. The algorithm works by identifying and transforming pairs of amplitudes in the state vector. We loop through all amplitude indices. For each index <code>i</code>, we use a bitwise mask <code>(i &amp; (1 &lt;&lt; target_qubit)) == 0</code> to check if the bit at position <code>target_qubit</code> is 0. If it is, we pair this index with <code>j = i + 2^target_qubit</code>, which represents the same basis state but with the target qubit flipped to 1.</p>
+<p>When applying a single-qubit gate in a multi-qubit system, we only transform amplitudes for basis states that differ in the target qubit. For example, applying Hadamard to qubit 0 in a 2-qubit system means we process pairs like (|00⟩, |01⟩) and (|10⟩, |11⟩) - states that differ only in qubit 0&rsquo;s value. For each pair of amplitudes {$\alpha$, $\beta$}, we apply the Hadamard matrix:</p>
+<ol>
+<li>Store the current values of both amplitudes</li>
+<li>Calculate new values: $\alpha' = (1/\sqrt{2})(\alpha + \beta)$ and $\beta' = (1/\sqrt{2})(\alpha - \beta)$</li>
+<li>Update both amplitudes in the state vector</li>
+</ol>
+<p>By only processing indices where the target bit is 0, we ensure each pair is processed exactly once, avoiding redundant calculations.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// Applies a Hadamard gate to the specified qubit.
+</span></span></span><span class="line"><span class="cl"><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// The Hadamard gate creates superposition, transforming:
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// - |0⟩ → (1/√2)(|0⟩ + |1⟩)
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// - |1⟩ → (1/√2)(|0⟩ - |1⟩)
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">apply_hadamard</span><span class="p">(</span><span class="n">state</span>: <span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">QuantumState</span><span class="p">,</span><span class="w"> </span><span class="n">target_qubit</span>: <span class="kt">usize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num_amplitudes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">.</span><span class="n">len</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">num_amplitudes</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Check if bit at position target_qubit in i is 0 using a bitwise mask
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">target_qubit</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">target_qubit</span><span class="p">);</span><span class="w">  </span><span class="c1">// Same as i + 2^target_qubit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">old_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">old_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">[</span><span class="n">j</span><span class="p">];</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="kt">f64</span>::<span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// Compute new values
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">new_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_i</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">old_j</span><span class="p">).</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">new_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">old_i</span><span class="p">.</span><span class="n">subtract</span><span class="p">(</span><span class="o">&amp;</span><span class="n">old_j</span><span class="p">).</span><span class="n">scale</span><span class="p">(</span><span class="n">factor</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// Update the state
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">            </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_i</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_j</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>The controlled-NOT (CNOT) gate flips the target qubit if and only if the control qubit is |1⟩. The implementation follows a similar pattern to the Hadamard gate but with different logic. We loop through all amplitude indices in the state vector. For each index, we check two conditions:</p>
+<ul>
+<li>Is the control qubit bit set to 1? <code>(i &amp; (1 &lt;&lt; control_qubit)) != 0</code></li>
+<li>Is the target qubit bit set to 0? <code>(i &amp; (1 &lt;&lt; target_qubit)) == 0</code>
+If both conditions are true, we&rsquo;ve found an amplitude pair that needs swapping.</li>
+</ul>
+<p>The CNOT gate only acts when the control is $\ket{1}$. When it does act, it swaps amplitudes for basis states that differ in the target qubit. By checking if the target bit is 0, we process each pair exactly once - swapping index <code>i</code> with <code>j = i ^ (1 &lt;&lt; target_qubit)</code> (using XOR to flip just the target bit). For example, in the basis state |10⟩ (control=1, target=0), the CNOT swaps its amplitude with |11⟩ (control=1, target=1). But for |00⟩ (control=0), nothing happens because the control bit isn&rsquo;t 1.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// Applies a CNOT gate to the specified qubit.
+</span></span></span><span class="line"><span class="cl"><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// The CNOT gate flips the target qubit if the control bit is |1⟩:
+</span></span></span><span class="line"><span class="cl"><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// If our control bit is 0 and the target bit is 1 we have this truth
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// table;
+</span></span></span><span class="line"><span class="cl"><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// - |00&gt; -&gt; |00&gt;
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// - |01&gt; -&gt; |01&gt;
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// - |10&gt; -&gt; |11&gt;
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// - |11&gt; -&gt; |10&gt;
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">apply_cnot</span><span class="p">(</span><span class="n">state</span>: <span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">QuantumState</span><span class="p">,</span><span class="w"> </span><span class="n">control_qubit</span>: <span class="kt">usize</span><span class="p">,</span><span class="w"> </span><span class="n">target_qubit</span>: <span class="kt">usize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num_amplitudes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">.</span><span class="n">len</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">num_amplitudes</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// First check: is the control bit set to 1?
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">control_qubit</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// only process when target bit is 0
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">target_qubit</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">// Calculate the swap partner
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">target_qubit</span><span class="p">);</span><span class="w">  </span><span class="c1">// XOR flips the target bit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">                
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="c1">// Swap amplitudes[i] and amplitudes[j]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">                </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div>
+<h1 class="relative group">Circuit Struct 
+    <div id="circuit-struct" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#circuit-struct" aria-label="Anchor">#</a>
+    </span>        
+    
+</h1>
+<p>The circuit struct holds the information about the queue of gates and the number of qubits in the system. It needs to contain functions to add gates in order and be able to display the entire circuit to see what is going on.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// A quantum circuit consisting of a sequence of gates applied to qubits.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">Circuit</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">num_qubits</span>: <span class="kt">usize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">gates</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Gate</span><span class="o">&gt;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>For the circuit struct implementation we have functions to:</p>
+<ol>
+<li>Create a new circuit which creates an empty gate vector and a specified number of qubits for the system to keep a track of.</li>
+<li>A function which adds a gate to the queue, this takes a gate enum with the target information and pushes it to the vector.</li>
+<li>Some display functions for getting the number of qubits in the struct and a list of the gates for displaying the circuit.</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">impl</span><span class="w"> </span><span class="n">Circuit</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Creates a new quantum circuit with the specified number of qubits.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// All qubits are initialized to |0⟩ when the circuit is executed.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">new</span><span class="p">(</span><span class="n">num_qubits</span>: <span class="kt">usize</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Circuit</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">num_qubits</span><span class="p">,</span><span class="w"> </span><span class="n">gates</span>: <span class="nb">Vec</span>::<span class="n">new</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Adds a gate to the circuit.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">///
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// Gates are executed in the order they are added.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">add_gate</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">gate</span>: <span class="nc">Gate</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">gates</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">gate</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Returns the number of qubits in the circuit.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">num_qubits</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">usize</span> <span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Returns a slice of all gates in the circuit.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">gates</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kp">&amp;</span><span class="p">[</span><span class="n">Gate</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="n">gates</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Finally, we want a way to display the circuit using the <code>println!</code> macro. We can implement the <code>fmt::Display</code> trait for the Circuit struct to enable this. This implementation creates a vector of strings with one per qubit to track, and initialises the start of those strings by labelling the qubit number and appending &ldquo;─&rdquo; to represent a quantum wire. For each gate in the circuit, an identifier is pushed to the relevant string to specify whether the qubit has been changed by the gate or it&rsquo;s been left alone with a wire segment. This vector of strings is then written to the console line-by-line, creating an ASCII circuit diagram.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">impl</span><span class="w"> </span><span class="n">fmt</span>::<span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Circuit</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">fn</span> <span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span>: <span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">fmt</span>::<span class="n">Formatter</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">fmt</span>::<span class="nb">Result</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Create a vector of strings, one per qubit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">lines</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span>::<span class="n">new</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Initialize each line with the qubit label
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">lines</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="fm">format!</span><span class="p">(</span><span class="s">&#34;q</span><span class="si">{}</span><span class="s">: ─&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Process each gate
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">gates</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Gate</span>::<span class="n">Hadamard</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="k">match</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="n">i</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;H&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Gate</span>::<span class="no">CNOT</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">control</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="k">match</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="n">i</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;C&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="n">i</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">*</span><span class="n">control</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;●&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                                </span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push</span><span class="p">(</span><span class="sc">&#39;─&#39;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">lines</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;{}&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div>
+<h1 class="relative group">Simulator 
+    <div id="simulator" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#simulator" aria-label="Anchor">#</a>
+    </span>        
+    
+</h1>
+<p>The final part of this project is the actual simulator which will apply all the gate functions to a state vector in order. This struct doesn&rsquo;t need to store any information so we just need a default implementation for it.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// Simulator for the quantum circuit
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">Simulator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">impl</span><span class="w"> </span><span class="nb">Default</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Simulator</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">fn</span> <span class="nf">default</span><span class="p">()</span><span class="w"> </span>-&gt; <span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Simulator</span>::<span class="n">new</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>When we want to run the simulator on the circuit, we pass in a reference to the circuit and the number of times to run the measurement. This then runs the internal <code>run_once</code> function n times. Inside <code>run_once</code>, we create a fresh quantum state initialised to |00&hellip;0⟩, then for each gate in the circuit, we match the enum and apply the corresponding gate function to the quantum state. This process is repeated until the circuit is completed and then the state is finally measured and the result of that measurement is stored in a results vector. After the n runs are completed, the vector is returned with the result of every trial.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">impl</span><span class="w"> </span><span class="n">Simulator</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Returns a new Simulator object to run a circuit.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">new</span><span class="p">()</span><span class="w"> </span>-&gt; <span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Simulator</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Run circuit n_shots times, return measurement results.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">run</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">circuit</span>: <span class="kp">&amp;</span><span class="nc">Circuit</span><span class="p">,</span><span class="w"> </span><span class="n">n_shots</span>: <span class="kt">usize</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span>::<span class="n">new</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">n_shots</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">results</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">run_once</span><span class="p">(</span><span class="n">circuit</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">results</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// Helper: Execute circuit once and return final measurement
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="k">fn</span> <span class="nf">run_once</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">circuit</span>: <span class="kp">&amp;</span><span class="nc">Circuit</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">String</span> <span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QuantumState</span>::<span class="n">new</span><span class="p">(</span><span class="n">circuit</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">circuit</span><span class="p">.</span><span class="n">gates</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Gate</span>::<span class="n">Hadamard</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">gates</span>::<span class="n">apply_hadamard</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Gate</span>::<span class="no">CNOT</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">control</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">gates</span>::<span class="n">apply_cnot</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">control</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">state</span><span class="p">.</span><span class="n">measure</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="sd">/// Run circuit with the trace active to see the journey of the quantum state through
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="sd">/// the circuit.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">run_with_trace</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">circuit</span>: <span class="kp">&amp;</span><span class="nc">Circuit</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">ExecutionTrace</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExecutionTrace</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">steps</span>: <span class="nb">Vec</span>::<span class="n">new</span><span class="p">()</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">QuantumState</span>::<span class="n">new</span><span class="p">(</span><span class="n">circuit</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Capture initial state
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="n">trace</span><span class="p">.</span><span class="n">steps</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">TraceStep</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">description</span>: <span class="s">&#34;Initial state&#34;</span><span class="p">.</span><span class="n">to_string</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">state</span>: <span class="nc">state</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w"> </span><span class="c1">// We need to clone the state
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Apply each gate and capture state after each
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">circuit</span><span class="p">.</span><span class="n">gates</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Gate</span>::<span class="n">Hadamard</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">gates</span>::<span class="n">apply_hadamard</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">trace</span><span class="p">.</span><span class="n">steps</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">TraceStep</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">description</span>: <span class="nc">format</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;Applied Hadamard to qubit {}&#34;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">state</span>: <span class="nc">state</span><span class="p">.</span><span class="n">clone</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">Gate</span>::<span class="no">CNOT</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">control</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">gates</span>::<span class="n">apply_cnot</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">control</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="n">trace</span><span class="p">.</span><span class="n">steps</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">TraceStep</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">description</span>: <span class="nc">format</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;Applied CNOT (control: {}, target: {})&#34;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">control</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">target</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                        </span><span class="n">state</span>: <span class="nc">state</span><span class="p">.</span><span class="n">clone</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">measure</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">measured_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">usize</span>::<span class="n">from_str_radix</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">).</span><span class="n">unwrap</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Set all amplitudes to 0, then set measured state to 1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">measured_index</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Complex</span>::<span class="n">new</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Complex</span>::<span class="n">new</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">trace</span><span class="p">.</span><span class="n">steps</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">TraceStep</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">description</span>: <span class="nc">format</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;Measurement result: {}&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">state</span>: <span class="nc">state</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">trace</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>I wasn&rsquo;t satisfied with just this however, and wanted to see how the state evolves over time in the simulator. I created the <code>run_with_trace</code> function <strong>for</strong> this. This function works in the same way as the <code>run</code> function but a trace is also created to follow the state through the circuit. After every gate is applied, a copy of the current state is created and added to a struct called <code>TraceStep</code> along with a description of what just happened. These <code>TraceStep</code> structs are stored in an <code>ExecutionTrace</code> struct as a vector and with its display implementation, a trace of the state is created that allows a researcher to see what happened to the quantum state at every step.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="sd">/// Struct to hold information of the current step for tracing.
+</span></span></span><span class="line"><span class="cl"><span class="sd">/// Holds a description of the step as well as the Quantum State.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">TraceStep</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">description</span>: <span class="nb">String</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">state</span>: <span class="nc">QuantumState</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="sd">/// Holds multiple TraceSteps to be iterated over when read.
+</span></span></span><span class="line"><span class="cl"><span class="sd"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">ExecutionTrace</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">steps</span>: <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">TraceStep</span><span class="o">&gt;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">impl</span><span class="w"> </span><span class="n">fmt</span>::<span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">ExecutionTrace</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">fn</span> <span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span>: <span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">fmt</span>::<span class="n">Formatter</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">fmt</span>::<span class="nb">Result</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">step_num</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">steps</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">enumerate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;Step {}: {}&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">step_num</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="p">.</span><span class="n">description</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// Convert state to ket notation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">ket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state_to_ket</span><span class="p">(</span><span class="o">&amp;</span><span class="n">step</span><span class="p">.</span><span class="n">state</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;  State: {}&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">ket</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w"> </span><span class="c1">// blank line between steps
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">fn</span> <span class="nf">state_to_ket</span><span class="p">(</span><span class="n">state</span>: <span class="kp">&amp;</span><span class="nc">QuantumState</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nb">String</span> <span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">terms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span>::<span class="n">new</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">amplitude</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">amplitudes</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">enumerate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Skip near-zero amplitudes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">amplitude</span><span class="p">.</span><span class="n">magnitude_squared</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">1e-10</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">continue</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Convert index to binary basis state
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">basis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&#34;</span><span class="si">{:0width$b}</span><span class="s">&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// Format the coefficient (just the real part for now, assuming imaginary ≈ 0)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">coeff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">amplitude</span><span class="p">.</span><span class="n">real</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">terms</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="fm">format!</span><span class="p">(</span><span class="s">&#34;</span><span class="si">{:.4}</span><span class="s">|</span><span class="si">{}</span><span class="s">⟩&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">coeff</span><span class="p">,</span><span class="w"> </span><span class="n">basis</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">terms</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#34; + &#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div>
+<h1 class="relative group">Results 
+    <div id="results" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#results" aria-label="Anchor">#</a>
+    </span>        
+    
+</h1>
+<p>Putting this all together, we end up with a working quantum circuit simulator that can track the quantum state vector and calculate the probability of a measurement. The following is an example of the Bell state creation code;</p>
+<ul>
+<li>We start by initialising a mutable circuit with 2 qubits.</li>
+<li>With the mutable circuit we add a Hadamard gate targeting qubit 0.</li>
+<li>We then apply a controlled NOT gate on qubit 1 with qubit 0 being the control bit.</li>
+<li>A simulator struct is created and the circuit is ran 1000 times.</li>
+<li>The result vector is iterated over and we count the number of times the system is measured as &ldquo;00&rdquo; or &ldquo;11&rdquo;. As the qubits are entangled these should be the only outputs.</li>
+</ul>
+<p>Looking at the outputs of the code we can see the circuit diagram printed with the 2 qubits and the specified gates acting on them. From our measurements we get about a 50/50 chance of either measurement which is the expected behaviour, and this means the simulator works!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">use</span><span class="w"> </span><span class="n">phobos</span>::<span class="p">{</span><span class="n">Circuit</span><span class="p">,</span><span class="w"> </span><span class="n">Gate</span><span class="p">,</span><span class="w"> </span><span class="n">Simulator</span><span class="p">,</span><span class="w"> </span><span class="n">plot_histogram</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// Create a Bell state circuit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">circuit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Circuit</span>::<span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">circuit</span><span class="p">.</span><span class="n">add_gate</span><span class="p">(</span><span class="n">Gate</span>::<span class="n">Hadamard</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">target</span>: <span class="mi">0</span><span class="w"> </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">circuit</span><span class="p">.</span><span class="n">add_gate</span><span class="p">(</span><span class="n">Gate</span>::<span class="no">CNOT</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">control</span>: <span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">target</span>: <span class="mi">1</span><span class="w"> </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;Circuit:&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;</span><span class="si">{}</span><span class="s">&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">circuit</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// Run the circuit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">sim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Simulator</span>::<span class="n">new</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sim</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="o">&amp;</span><span class="n">circuit</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// Count outcomes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count_00</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count_11</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">results</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">as_str</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="s">&#34;00&#34;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">count_00</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="s">&#34;11&#34;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">count_11</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">Results from 1000 measurements:&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;00: </span><span class="si">{}</span><span class="s"> (</span><span class="si">{:.1}</span><span class="s">%)&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">count_00</span><span class="p">,</span><span class="w"> </span><span class="n">count_00</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">10.0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;11: </span><span class="si">{}</span><span class="s"> (</span><span class="si">{:.1}</span><span class="s">%)&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">count_11</span><span class="p">,</span><span class="w"> </span><span class="n">count_11</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">10.0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">Probability Distribution:&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">plot_histogram</span><span class="p">(</span><span class="o">&amp;</span><span class="n">results</span><span class="p">,</span><span class="w"> </span><span class="n">circuit</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">    Finished <span class="sb">`</span>dev<span class="sb">`</span> profile <span class="o">[</span>unoptimized + debuginfo<span class="o">]</span> target<span class="o">(</span>s<span class="o">)</span> in 6.99s
+</span></span><span class="line"><span class="cl">     Running <span class="sb">`</span>target/debug/examples/bell_state<span class="sb">`</span>
+</span></span><span class="line"><span class="cl">Circuit:
+</span></span><span class="line"><span class="cl">q0: ─H─●─
+</span></span><span class="line"><span class="cl">q1: ───C─
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Results from <span class="m">1000</span> measurements:
+</span></span><span class="line"><span class="cl">00: <span class="m">485</span> <span class="o">(</span>48.5%<span class="o">)</span>
+</span></span><span class="line"><span class="cl">11: <span class="m">515</span> <span class="o">(</span>51.5%<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Probability Distribution:
+</span></span><span class="line"><span class="cl">00: ❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚
+</span></span><span class="line"><span class="cl">01:
+</span></span><span class="line"><span class="cl">10:
+</span></span><span class="line"><span class="cl">11: ❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚
+</span></span></code></pre></div><p>If we ran this with the <code>run_with_trace</code> function, the following would have been the output. We can see the state evolving over time to get the final measurement. It should be noted, we display 0.7071 instead of 1/$\sqrt{2}$  for an easier display function, as they can be used interchangeably.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Circuit Trace:
+</span></span><span class="line"><span class="cl">Step 0: Initial state
+</span></span><span class="line"><span class="cl">  State: 1.0000<span class="p">|</span>00⟩
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Step 1: Applied Hadamard to qubit <span class="m">0</span>
+</span></span><span class="line"><span class="cl">  State: 0.7071<span class="p">|</span>00⟩ + 0.7071<span class="p">|</span>01⟩
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Step 2: Applied CNOT <span class="o">(</span>control: 0, target: 1<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  State: 0.7071<span class="p">|</span>00⟩ + 0.7071<span class="p">|</span>11⟩
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Step 3: Measurement result: <span class="m">00</span>
+</span></span><span class="line"><span class="cl">  State: 1.0000<span class="p">|</span>00⟩
+</span></span></code></pre></div><p>This project is still under development and can be found on my GitHub or with this link <a
+  href="https://github.com/Zeos-ctrl/phobos"
+    target="_blank"
+  >https://github.com/Zeos-ctrl/phobos</a></p>
+<p>In the future I want to expand this project to also include some quantum machine learning processes, however this requires building a classical machine learning library in rust to mirror it. This classical project is ongoing and can be followed at <a
+  href="https://github.com/Zeos-ctrl/deimos"
+    target="_blank"
+  >https://github.com/Zeos-ctrl/deimos</a></p>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+  
+  <section class="flex flex-row flex-wrap justify-center pt-4 text-xl">
+    
+      
+        <a
+          target="_blank"
+          class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800"
+          href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:1313/posts/creating-a-quantum-circuit-simulator/&amp;title=Creating%20a%20Quantum%20Circuit%20Simulator"
+          title="Share on LinkedIn"
+          aria-label="Share on LinkedIn">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+</span>
+        </a>
+      
+    
+      
+        <a
+          target="_blank"
+          class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800"
+          href="https://twitter.com/intent/tweet/?url=http://localhost:1313/posts/creating-a-quantum-circuit-simulator/&amp;text=Creating%20a%20Quantum%20Circuit%20Simulator"
+          title="Tweet on Twitter"
+          aria-label="Tweet on Twitter">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></span>
+        </a>
+      
+    
+      
+        <a
+          target="_blank"
+          class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800"
+          href="mailto:?body=http://localhost:1313/posts/creating-a-quantum-circuit-simulator/&amp;subject=Creating%20a%20Quantum%20Circuit%20Simulator"
+          title="Send via email"
+          aria-label="Send via email">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1c-27.64 140.9 68.65 266.2 199.1 285.1c19.01 2.888 36.17-12.26 36.17-31.49l.0001-.6631c0-15.74-11.44-28.88-26.84-31.24c-84.35-12.98-149.2-86.13-149.2-174.2c0-102.9 88.61-185.5 193.4-175.4c91.54 8.869 158.6 91.25 158.6 183.2l0 16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98 .0036c-7.299 0-13.2 4.992-15.12 11.68c-24.85-12.15-54.24-16.38-86.06-5.106c-38.75 13.73-68.12 48.91-73.72 89.64c-9.483 69.01 43.81 128 110.9 128c26.44 0 50.43-9.544 69.59-24.88c24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3C495.1 107.1 361.2-9.332 207.8 20.73zM239.1 304.3c-26.47 0-48-21.56-48-48.05s21.53-48.05 48-48.05s48 21.56 48 48.05S266.5 304.3 239.1 304.3z"/></svg>
+</span>
+        </a>
+      
+    
+      
+        <a
+          target="_blank"
+          class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800"
+          href="https://api.whatsapp.com/send?text=http://localhost:1313/posts/creating-a-quantum-circuit-simulator/&amp;resubmit=true&amp;title=Creating%20a%20Quantum%20Circuit%20Simulator"
+          title="Share via WhatsApp"
+          aria-label="Share via WhatsApp">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+</span>
+        </a>
+      
+    
+      
+        <a
+          target="_blank"
+          class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800"
+          href="https://t.me/share/url?url=http://localhost:1313/posts/creating-a-quantum-circuit-simulator/&amp;resubmit=true&amp;title=Creating%20a%20Quantum%20Circuit%20Simulator"
+          title="Share via Telegram"
+          aria-label="Share via Telegram">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.107-61.51,68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608,69.142-14.845,10.194-26.894,9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7,18.45-13.7,108.446-47.248,144.628-62.3c68.872-28.647,83.183-33.623,92.511-33.789,2.052-.034,6.639.474,9.61,2.885a10.452,10.452,0,0,1,3.53,6.716A43.765,43.765,0,0,1,362.952,176.66Z"/></svg>
+</span>
+        </a>
+      
+    
+  </section>
+
+
+        
+
+      </div>
+
+      
+      
+        
+        
+          
+          
+        
+        
+        
+        <script
+          type="text/javascript"
+          src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
+          integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
+          data-oid="views_posts/Creating a Quantum Circuit Simulator.md"
+          data-oid-likes="likes_posts/Creating a Quantum Circuit Simulator.md"></script>
+      
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600">
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="flex group mr-3" href="/posts/quantum-algorithms/">
+              <span
+                class="mr-3 text-neutral-700 group-hover:text-primary-600 ltr:inline rtl:hidden dark:text-neutral dark:group-hover:text-primary-400"
+                >&larr;</span
+              >
+              <span
+                class="ml-3 text-neutral-700 group-hover:text-primary-600 ltr:hidden rtl:inline dark:text-neutral dark:group-hover:text-primary-400"
+                >&rarr;</span
+              >
+              <span class="flex flex-col">
+                <span class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >Quantum Algorithms</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2025-11-18T00:00:00&#43;00:00">18 November 2025</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+        <div id="top-scroller" class="pointer-events-none absolute top-[110vh] bottom-0 w-12 ltr:right-0 rtl:left-0 z-10">
+  <a
+    href="#the-top"
+    class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 mb-16 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+      
+      
+        
+          
+          
+      
+      
+      
+      <nav class="flex flex-row pb-4 text-base font-medium text-neutral-500 dark:text-neutral-400 ">
+        <ul class="flex list-none flex-col sm:flex-row">
+          
+            <li class=" flex mb-1 text-end sm:mb-0 sm:me-7 sm:last:me-0 ">
+              <a
+                class="decoration-primary-500 hover:underline hover:decoration-2 hover:underline-offset-2 flex items-center"
+                href="/tags/"
+                title="Tags">
+                
+                Tags
+              </a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          © 2025 Connor Bryan. All Rights Reserved
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+  </div>
+  
+    <script>
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    </script>
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/process.min.ee03488f19c93c2efb199e2e3014ea5f3cb2ce7d45154adb3399a158cac27ca52831db249ede5bb602700ef87eb02434139de0858af1818ab0fb4182472204a4.js"
+    integrity="sha512-7gNIjxnJPC77GZ4uMBTqXzyyzn1FFUrbM5mhWMrCfKUoMdsknt5btgJwDvh&#43;sCQ0E53ghYrxgYqw&#43;0GCRyIEpA=="></script>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="http://localhost:1313/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>

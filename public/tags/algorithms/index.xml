@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Algorithms on Connor Bryan</title>
+    <link>http://localhost:1313/tags/algorithms/</link>
+    <description>Recent content in Algorithms on Connor Bryan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>connor.bryan@zeos.system (Connor Bryan)</managingEditor>
+    <webMaster>connor.bryan@zeos.system (Connor Bryan)</webMaster>
+    <copyright>&amp;copy; 2025 Connor Bryan. All Rights Reserved</copyright>
+    <lastBuildDate>Tue, 18 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/algorithms/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Quantum Algorithms</title>
+      <link>http://localhost:1313/posts/quantum-algorithms/</link>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate>
+      <author>connor.bryan@zeos.system (Connor Bryan)</author>
+      <guid>http://localhost:1313/posts/quantum-algorithms/</guid>
+      <description>&lt;p&gt;Recently I picked up a textbook in Quantum Machine learning with python as it sounded interesting, and after finishing my Msc in Physics i felt like now was the time to get into it. In the textbook the author introduces the &amp;ldquo;Qubit&amp;rdquo;, a probabilistic bit that can be either a 1, 0 or a superposition between the two. Think of Schrodinger cat; The cat is either alive or dead, but until you open the box it is in a mixture of the two states. These quantum effects are what give us the phenomena of the double slit experiment where electrons can seem to go through both holes at once and there is a great video explaining this by Veritasium on YouTube (&lt;a
+  href=&#34;https://www.youtube.com/watch?v=qJZ1Ez28C-A%29&#34;
+    target=&#34;_blank&#34;
+  &gt;https://www.youtube.com/watch?v=qJZ1Ez28C-A)&lt;/a&gt;.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
