@@ -1,9 +1,11 @@
 ---
 title: Blog post
 date: 2025-12-03
-draft: true
+draft: false
 tags:
   - blog
+  - quantum
+  - rust
 ---
 Recently, I've been researching quantum mechanics, especially around quantum computing and I've been following a textbook on quantum machine learning. After using Python libraries like Cirq for the creation of circuits, I had the thought of creating a library in a ~~a~~ language  I enjoy using like Rust. The goal of the first draft of the simulator was to create a simple Bell state circuit. This project has a bunch of parts; I needed to create:
 

@@ -4,7 +4,7 @@ tags:
   - algorithms
 title: Quantum Algorithms
 date: 2025-11-18
-draft:
+draft: false
 ---
 Recently I picked up a textbook in Quantum Machine learning with python as it sounded interesting, and after finishing my Msc in Physics i felt like now was the time to get into it. In the textbook the author introduces the "Qubit", a probabilistic bit that can be either a 1, 0 or a superposition between the two. Think of Schrodinger cat; The cat is either alive or dead, but until you open the box it is in a mixture of the two states. These quantum effects are what give us the phenomena of the double slit experiment where electrons can seem to go through both holes at once and there is a great video explaining this by Veritasium on YouTube (https://www.youtube.com/watch?v=qJZ1Ez28C-A).
 
