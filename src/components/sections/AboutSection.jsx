@@ -3,7 +3,7 @@ const EXPERIENCE = [
     role: 'Head of Engineering',
     org: 'Tribela GmbH',
     date: '2025 – Present',
-    desc: 'Lead engineering on multi-modal (text, image, audio, video) machine learning for harmful-content detection — building the research pipelines and a ~500K-sample dataset to reach ~90% accuracy served via API, using LLM-agentic tooling to relabel ~100K samples at near-human quality, porting the Android app from Swift to React Native, standing up an open-source R&D branch, and pitching to industry leaders in London and New York.',
+    desc: 'Lead engineering on multi-modal (text, image, audio, video) machine learning for harmful-content detection, building the research pipelines and a ~500K-sample dataset to reach ~90% accuracy served via API, using LLM-agentic tooling to relabel ~100K samples at near-human quality, porting the Android app from Swift to React Native, standing up an open-source R&D branch, and pitching to industry leaders in London and New York.',
   },
   {
     role: 'Level 2 Swimming Coach',
@@ -15,7 +15,7 @@ const EXPERIENCE = [
     role: 'Access Control Engineer',
     org: 'Darren Bryan Security Services',
     date: '2018 – 2025',
-    desc: 'Installed and maintained security systems — locks, CCTV, and automated gates — for the Oxford Colleges, troubleshooting complex integration issues.',
+    desc: 'Installed and maintained security systems, locks, CCTV, and automated gates for the Oxford Colleges, troubleshooting complex integration issues.',
   },
 ]
 
@@ -78,7 +78,7 @@ export default function AboutSection() {
             </p>
             <p>
               You can reach me at{' '}
-              <a href="mailto:astrilcodex@gmail.com">astrilcodex@gmail.com</a>.
+              <a href="mailto:connor.bryan.0@proton.me">connor.bryan.0@proton.me</a>.
             </p>
           </div>
 

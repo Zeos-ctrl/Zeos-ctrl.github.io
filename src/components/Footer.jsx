@@ -105,7 +105,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:astrilcodex@gmail.com" className={linkClass}>
+                <a href="mailto:connor.bryan.0@proton.me" className={linkClass}>
                   Email
                 </a>
               </li>

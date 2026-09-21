@@ -44,7 +44,7 @@ export default function Cookies() {
       <h2>Contact</h2>
       <p>
         Questions? Email{' '}
-        <a href="mailto:astrilcodex@gmail.com">astrilcodex@gmail.com</a>. See
+        <a href="mailto:connor.bryan.0@proton.me">connor.bryan.0@proton.me</a>. See
         also the <Link to="/privacy">Privacy Policy</Link>.
       </p>
     </section>

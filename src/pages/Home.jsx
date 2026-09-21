@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useLenis } from 'lenis/react'
 import { AnomalousMatterHero } from '@/components/Hero'
-import LoadingSection from '@/components/sections/LoadingSection.jsx'
 import DirectiveSection from '@/components/sections/DirectiveSection.jsx'
 import ProjectsSection from '@/components/sections/ProjectsSection.jsx'
 import ResearchSection from '@/components/sections/ResearchSection.jsx'
@@ -33,7 +32,6 @@ export default function Home() {
         />
       </div>
 
-      <LoadingSection />
       <DirectiveSection />
       <AboutSection />
       <ProjectsSection />

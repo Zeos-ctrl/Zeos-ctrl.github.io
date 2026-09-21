@@ -79,7 +79,7 @@ export default function Privacy() {
       <h2>Contact</h2>
       <p>
         Questions about this policy? Email{' '}
-        <a href="mailto:astrilcodex@gmail.com">astrilcodex@gmail.com</a>.
+        <a href="mailto:connor.bryan.0@proton.me">connor.bryan.0@proton.me</a>.
       </p>
 
       <p>
