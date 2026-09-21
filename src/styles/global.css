@@ -1,0 +1,1152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- shadcn design tokens ----------------------------------------- */
+/* Colors are stored as bare HSL channels ("222 25% 7%") so Tailwind can
+   wrap them: hsl(var(--background)). Light is the default; .dark (set on
+   <html>) swaps in the dark palette used across the site. */
+@layer base {
+  :root {
+    /* Light mode: cream background, dark neutral text, monochrome accent —
+       mirrors the dark theme (which is white-on-black). */
+    --background: 0 0% 95%; /* #f3f3f3 */
+    --foreground: 0 0% 18%; /* #2e2d2e */
+    --card: 0 0% 91%;
+    --card-foreground: 0 0% 18%;
+    --popover: 0 0% 91%;
+    --popover-foreground: 0 0% 18%;
+    --primary: 0 0% 18%; /* dark accent (links/buttons) for contrast on cream */
+    --primary-foreground: 0 0% 95%;
+    --secondary: 0 0% 88%;
+    --secondary-foreground: 0 0% 18%;
+    --muted: 0 0% 88%;
+    --muted-foreground: 0 0% 38%; /* darker grey so secondary text is readable */
+    --accent: 0 0% 86%;
+    --accent-foreground: 0 0% 18%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 82%;
+    --input: 0 0% 82%;
+    --ring: 0 0% 18%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 100%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* ---- Non-token variables ------------------------------------------ */
+:root {
+  --maxw: 1920px;
+  --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* ---- Base --------------------------------------------------------- */
+a {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Prevent the 100vw full-bleed trick below from adding a horizontal scrollbar. */
+html {
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox — hide the scrollbar (Lenis handles scroll) */
+  -ms-overflow-style: none; /* legacy Edge/IE */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none; /* Chrome / Safari */
+}
+
+/* Animated static/grain across the whole background — sits behind the content
+   and gives the liquid-glass surfaces something to refract. The layer is bigger
+   than the viewport so the per-step jitter never reveals an edge. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.06;
+  background-size: 130px 130px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* steps(1) makes each keyframe a discrete jump → flickering TV-static. */
+  animation: grain 0.5s steps(1) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-12%, 6%); }
+  30% { transform: translate(6%, -10%); }
+  40% { transform: translate(-4%, 10%); }
+  50% { transform: translate(-10%, -6%); }
+  60% { transform: translate(10%, 2%); }
+  70% { transform: translate(-2%, 9%); }
+  80% { transform: translate(-9%, -9%); }
+  90% { transform: translate(7%, 6%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+}
+
+.site {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Let an element inside the max-width container span the full viewport width.
+   margin-left:50% moves its left edge to the page center, then translateX
+   pulls it back by half its own (100vw) width — re-centering it edge to edge.
+   The negative margin-top cancels main.container's top padding so a hero can
+   sit flush under the navbar. */
+.full-bleed {
+  width: 100vw;
+  /* Margin-based full-bleed (no transform) so descendants can use
+     position: sticky — a transformed ancestor would break it. */
+  margin-left: calc(50% - 50vw);
+  margin-top: -2.5rem;
+}
+
+/* ---- Hero scroll effect ------------------------------------------- */
+/* Tall wrapper: the extra height beyond one screen is the scroll distance the
+   pinned hero animates across. */
+.hero-scroll {
+  position: relative;
+  height: 220vh;
+}
+/* The visual, pinned in place while you scroll through .hero-scroll. */
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+/* Anomaly canvas + overlays. Faded out on scroll to reveal the noisy
+   background, so the transition into the next section keeps the grain. */
+.hero-visual {
+  position: absolute;
+  inset: 0;
+}
+/* Anomaly palette toggle, floating in the hero corner. */
+.hero-palette {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 25;
+  display: inline-flex;
+  gap: 0.4rem;
+  padding: 0.4rem;
+  border-radius: 999px;
+  background: hsl(var(--card) / 0.6);
+  border: 1px solid hsl(var(--border));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.hero-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+.hero-swatch[data-active="true"] {
+  border-color: hsl(var(--foreground));
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+main.container {
+  flex: 1;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+/* Standalone routed pages (post, story, chapter, 404). Extra top padding clears
+   the floating navbar dock; min-height keeps short pages from crowding the
+   footer. Home opts out — its hero is full-bleed under the dock. */
+.page {
+  min-height: 100vh;
+  padding-top: 2.5rem;
+}
+
+/* ---- Custom cursor ------------------------------------------------ */
+/* Hide the OS cursor everywhere while the custom one is active. */
+body.custom-cursor-active,
+body.custom-cursor-active * {
+  cursor: none;
+}
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  pointer-events: none; /* never block clicks / hover on the page */
+  z-index: 9999;
+  /* White + difference blend = the pixels behind the cursor get inverted. */
+  background: #fff;
+  mix-blend-mode: difference;
+  /* Animate the size change on hover, but NOT transform — JS drives that. */
+  transition: width 0.2s ease, height 0.2s ease;
+}
+.cursor.is-hover {
+  width: 64px;
+  height: 64px;
+}
+/* While gesture control drives the page, hide the mouse cursor entirely
+   (the OS cursor is already hidden by .custom-cursor-active). */
+body.gesture-active .cursor {
+  display: none;
+}
+
+/* ---- Gesture control --------------------------------------------- */
+/* Small mirrored camera preview (bottom-left) — keeps the camera state visible. */
+.gesture-video {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 46;
+  width: 160px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--foreground) / 0.15);
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transform: scaleX(-1); /* mirror to match the on-screen cursor */
+  pointer-events: none;
+  display: none;
+}
+.gesture-video.is-on {
+  display: block;
+}
+/* Hand cursor driven by the index fingertip. */
+.gesture-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9997;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid hsl(var(--foreground));
+  box-shadow: 0 0 12px hsl(var(--foreground) / 0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, width 0.12s ease, height 0.12s ease,
+    background-color 0.12s ease;
+}
+.gesture-cursor.is-pinch {
+  width: 26px;
+  height: 26px;
+  background: hsl(var(--foreground) / 0.25);
+}
+.gesture-status {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 46;
+  max-width: calc(100vw - 3rem);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.08);
+  border: 1px solid hsl(var(--foreground) / 0.12);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: hsl(var(--foreground));
+  font-size: 0.8rem;
+  text-align: center;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .gesture-status {
+    bottom: 1rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.62rem;
+    line-height: 1.35;
+  }
+  .gesture-video {
+    width: 96px;
+    top: 1rem;
+    left: 1rem;
+    border-radius: 10px;
+  }
+}
+
+/* ---- Page-change wipe --------------------------------------------- */
+/* Structural rules only — color, transform and timing are set inline by the
+   PageTransition component so the whole effect is configurable from one file. */
+.page-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 9998; /* over the page, just under the custom cursor (9999) */
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ---- Navbar (notch) ----------------------------------------------- */
+/* Full-width strip; only the centered notch is clickable, so it doesn't block
+   the hero underneath. */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+/* The notch bar: fused to the top edge, rounded bottom corners, solid so the
+   carved shape reads on the black page. */
+/* ---- Back-to-top button (progress ring) --------------------------- */
+.scroll-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 45;
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / 0.06);
+  border: 1px solid hsl(var(--foreground) / 0.1);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.2s ease;
+}
+.scroll-top:hover {
+  background: hsl(var(--foreground) / 0.12);
+}
+.scroll-top__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* start the fill at the top */
+}
+.scroll-top__track {
+  fill: none;
+  stroke: hsl(var(--foreground) / 0.15);
+  stroke-width: 2;
+}
+.scroll-top__progress {
+  fill: none;
+  stroke: hsl(var(--foreground));
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s linear;
+}
+.scroll-top__arrow {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+/* Liquid-glass notch: frosted translucent bar with refraction + inset shine. */
+.notch {
+  pointer-events: auto;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 44px;
+  padding: 0 1rem;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  background: hsl(var(--foreground) / 0.06);
+  border: 1px solid hsl(var(--foreground) / 0.08);
+  border-top: none;
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px) url(#glass-distortion);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.3),
+    inset 1px 1px 1px 0 hsl(var(--foreground) / 0.12),
+    inset -1px -1px 1px 0 hsl(var(--foreground) / 0.05);
+}
+.notch__brand {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.35rem;
+  color: hsl(var(--foreground)); /* keep the logo white (not the wing color) */
+}
+.notch__logo {
+  height: 20px;
+  width: auto;
+  display: block;
+}
+.notch__divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 0.15rem;
+  background: hsl(var(--border));
+}
+.notch__items {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.notch__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.15s ease;
+}
+.notch__item:hover {
+  color: hsl(var(--foreground));
+  text-decoration: none;
+}
+.notch__item--active {
+  color: hsl(var(--background)); /* contrasts the pill (which is --foreground) */
+}
+/* Sliding active indicator (framer-motion shared layout). */
+.notch__pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: hsl(var(--foreground));
+  z-index: 0;
+}
+.notch__label {
+  position: relative;
+  z-index: 1;
+}
+/* Theme toggle: a half-filled dot that flips light/dark. */
+.notch__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: hsl(var(--muted-foreground));
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.notch__icon-btn:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / 0.1);
+}
+.notch__icon-btn.is-active {
+  color: hsl(var(--foreground));
+  background: hsl(var(--foreground) / 0.14);
+}
+.notch__theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: hsl(var(--foreground));
+  transition: background-color 0.15s ease;
+}
+.notch__theme:hover {
+  background: hsl(var(--foreground) / 0.1);
+}
+.theme-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid hsl(var(--foreground));
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 0 50%,
+    transparent 50% 100%
+  );
+}
+/* Hamburger — hidden on desktop, shown on mobile. */
+.notch__menu {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: hsl(var(--foreground));
+  transition: background-color 0.15s ease;
+}
+.notch__menu:hover {
+  background: hsl(var(--foreground) / 0.1);
+}
+
+/* ---- Mobile navbar ------------------------------------------------- */
+@media (max-width: 640px) {
+  .notch__menu {
+    display: inline-flex;
+  }
+  /* Section links collapse into a glass dropdown below the notch. */
+  .notch__items {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.15rem;
+    min-width: 210px;
+    padding: 0.5rem;
+    border-radius: 16px;
+    background: hsl(var(--foreground) / 0.08);
+    border: 1px solid hsl(var(--foreground) / 0.14);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px) url(#glass-distortion);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  }
+  .notch__items.is-open {
+    display: flex;
+  }
+  .notch__item {
+    height: 40px;
+    padding: 0 1rem;
+  }
+}
+
+
+/* ---- Hero (home) -------------------------------------------------- */
+.hero {
+  padding: 2rem 0;
+}
+.hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem;
+}
+.hero__lead {
+  color: hsl(var(--muted-foreground));
+  font-size: 1.15rem;
+  max-width: 560px;
+}
+.hero__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius);
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 600;
+}
+.btn:hover {
+  text-decoration: none;
+  opacity: 0.9;
+}
+.btn--ghost {
+  background: transparent;
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+}
+
+/* ---- Home sections ------------------------------------------------ */
+.section {
+  min-height: 100vh;
+  padding: 7rem 0;
+  /* Anchor scroll lands 96px down so the sticky navbar doesn't cover the
+     heading (used by native #hash jumps; Lenis uses its own offset). */
+  scroll-margin-top: 96px;
+}
+
+/* Small eyebrow label above a section title (e.g. "Chapter 0 · Prologue"). */
+.chapter-label {
+  margin: 0 0 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+/* "Read more" link (e.g. Directive → chapters). */
+.read-more {
+  margin-top: 2rem;
+  font-size: 1.05rem;
+}
+.read-more a {
+  font-weight: 600;
+}
+
+/* Prev / next links at the foot of a chapter. */
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid hsl(var(--border));
+  font-size: 0.95rem;
+}
+
+/* ---- Loading / boot section --------------------------------------- */
+/* Tall wrapper provides the scroll distance the pinned panel animates across.
+   Taller = the panel is less sensitive to scroll (more scrolling per %). */
+.loading-scroll {
+  position: relative;
+  height: 400vh;
+}
+/* Panel locked to the center of the viewport while you scroll the wrapper.
+   A single-cell grid stacks both beats (boot + welcome) in the same spot so
+   they cross-fade in place. */
+.loading-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.loading-sticky > * {
+  grid-area: 1 / 1; /* overlap the boot terminal and the welcome message */
+}
+/* Terminal boot text (no window chrome — floats on the page background). */
+/* Liquid-glass terminal: frosted dark panel that refracts the noise/anomaly
+   behind it. Stays dark regardless of site theme (like a terminal). */
+.terminal {
+  width: 100%;
+  max-width: 620px;
+  overflow: hidden;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(14, 14, 17, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px) url(#glass-distortion);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.55),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.06),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.03);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+}
+.terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.terminal__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.terminal__dot--red,
+.terminal__dot--yellow,
+.terminal__dot--green {
+  background: #48484f; /* monochrome window buttons */
+}
+.terminal__title {
+  margin-left: 0.5rem;
+  color: #8a8a94;
+  font-size: 0.72rem;
+}
+.terminal__body {
+  padding: 1rem 1.15rem 1.3rem;
+  color: #d4d4d8;
+  line-height: 1.7;
+  min-height: 240px; /* stable height as lines print in */
+}
+/* Welcome message — its own beat, centered in the same spot as the terminal. */
+.loading-welcome {
+  font-family: var(--font);
+  text-align: center;
+  pointer-events: none;
+}
+.loading-welcome__logo {
+  display: block;
+  height: clamp(220px, 36vw, 300px);
+  width: auto;
+  margin: 0 auto;
+  color: hsl(var(--foreground));
+}
+.loading-welcome__subtitle {
+  margin: 1.5rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 1rem;
+}
+.term-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+/* Monochrome terminal text: shades of gray/white only. */
+.term-banner {
+  margin: 0 0 0.9rem;
+  color: #e4e4e7;
+  font-size: 0.62rem;
+  line-height: 1.15;
+  white-space: pre;
+  overflow-x: auto;
+}
+.term-user {
+  color: #e4e4e7; /* bright */
+}
+.term-path {
+  color: #8a8a94; /* dim */
+}
+.term-sep {
+  color: #6b6b73; /* dimmer */
+}
+.term-ok {
+  color: #e4e4e7; /* bright status */
+}
+.term-progress {
+  margin-top: 0.6rem;
+  letter-spacing: 0.02em;
+}
+/* Blinking block cursor. */
+.term-cursor {
+  display: inline-block;
+  margin-left: 0.15ch;
+  animation: term-blink 1s steps(1) infinite;
+}
+@keyframes term-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .term-cursor {
+    animation: none;
+  }
+}
+
+/* ---- Page headings ------------------------------------------------ */
+.page-title {
+  font-size: clamp(2.75rem, 7vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.75rem;
+}
+.page-lead {
+  color: hsl(var(--muted-foreground));
+  font-size: 1.05rem;
+  margin: 0 0 3.5rem;
+}
+
+/* ---- About section ------------------------------------------------ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+}
+.about-block + .about-block {
+  margin-top: 3.5rem;
+}
+.about-block__title {
+  margin: 0 0 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+.timeline__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+.timeline__role {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+.timeline__date {
+  flex-shrink: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  color: hsl(var(--muted-foreground));
+}
+.timeline__org {
+  display: block;
+  margin-top: 0.15rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+.timeline__desc {
+  margin: 0.5rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+.timeline__points {
+  margin: 0.65rem 0 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.timeline__points li::marker {
+  color: hsl(var(--muted-foreground) / 0.5);
+}
+/* Profile photo (or its placeholder). */
+.about-photo {
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  font-size: 0.85rem;
+}
+
+/* ---- Cards & grids ------------------------------------------------ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ---- Scramble list (row list with decode-on-hover) ---------------- */
+.scramble-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid hsl(var(--border));
+}
+.scramble-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1rem 0.25rem;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-decoration: none;
+  transition: color 0.2s ease, padding-left 0.2s ease;
+}
+.scramble-link:hover {
+  color: hsl(var(--foreground));
+  padding-left: 0.75rem;
+  text-decoration: none;
+}
+.scramble-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scramble-cell--title {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.05rem;
+  color: hsl(var(--foreground));
+}
+.scramble-cell--meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.scramble-cell--right {
+  text-align: right;
+}
+
+/* ---- Index list (big editorial rows) ------------------------------ */
+.entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.entry {
+  display: block;
+  padding: 3rem 0.5rem;
+  border-top: 1px solid hsl(var(--border));
+  color: inherit;
+  text-decoration: none;
+  transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.entry-list li:last-child .entry {
+  border-bottom: 1px solid hsl(var(--border));
+}
+.entry:hover {
+  padding-left: 1.25rem;
+  text-decoration: none;
+}
+.entry__top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.25s ease;
+}
+.entry:hover .entry__top {
+  color: hsl(var(--foreground));
+}
+/* Title on the left, optional short description on the right. */
+.entry__main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2.5rem;
+}
+.entry__title {
+  margin: 0;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
+}
+.entry__desc {
+  flex-shrink: 0;
+  max-width: 300px;
+  margin: 0 0 0.4rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: right;
+}
+@media (max-width: 640px) {
+  .entry__main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .entry__desc {
+    max-width: none;
+    margin-bottom: 0;
+    text-align: left;
+  }
+}
+.entry__meta {
+  margin: 1.25rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+}
+
+.card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.card__title {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.2rem;
+}
+.card__title a {
+  color: hsl(var(--foreground));
+}
+.card__desc {
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 1rem;
+}
+.card__date {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.85rem;
+}
+.card__links {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+/* ---- Tags --------------------------------------------------------- */
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.tag {
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+}
+
+/* ---- Post / prose ------------------------------------------------- */
+.post__back {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: hsl(var(--muted-foreground));
+}
+.post__header {
+  margin-bottom: 2.5rem;
+}
+/* Large title at the top of each post. clamp() scales it with the viewport. */
+.post__title {
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem;
+}
+.post__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+.post__meta .tags {
+  margin: 0;
+}
+/* Responsive images inside post content. */
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.75rem auto;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+}
+.prose {
+  line-height: 1.8;
+}
+.prose h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+.prose h3 {
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+}
+.prose p {
+  margin: 1rem 0;
+}
+/* Tailwind's Preflight strips list markers, so restore them for prose. */
+.prose ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.prose ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.prose a {
+  text-decoration: underline;
+}
+.prose code {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.9em;
+}
+.prose pre {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose pre code {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.prose blockquote {
+  border-left: 3px solid hsl(var(--primary));
+  margin: 1.5rem 0;
+  padding: 0.25rem 1rem;
+  color: hsl(var(--muted-foreground));
+}
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+.prose th,
+.prose td {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}

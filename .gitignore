@@ -1,2 +1,13 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-images.py
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+
+# Editor / logs
+.vscode/*
+!.vscode/extensions.json
+.idea
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
