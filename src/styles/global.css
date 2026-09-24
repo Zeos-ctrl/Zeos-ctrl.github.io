@@ -944,6 +944,8 @@ body.gesture-active .cursor {
 .prose img {
   display: block;
   max-width: 100%;
+  max-height: 80vh; /* cap large plots so they don't balloon on wide monitors */
+  width: auto;
   height: auto;
   margin: 1.75rem auto;
   border-radius: var(--radius);

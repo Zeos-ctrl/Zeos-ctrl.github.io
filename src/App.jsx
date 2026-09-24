@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import PageTransition from './components/PageTransition.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
+import Research from './pages/Research.jsx'
 import BlogPost from './pages/BlogPost.jsx'
 import Story from './pages/Story.jsx'
 import StoryChapter from './pages/StoryChapter.jsx'
@@ -18,6 +19,7 @@ export default function App() {
         <Routes location={location}>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="research" element={<Research />} />
             <Route path="research/:slug" element={<BlogPost />} />
             <Route path="story" element={<Story />} />
             <Route path="story/:slug" element={<StoryChapter />} />
