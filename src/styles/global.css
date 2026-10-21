@@ -96,7 +96,7 @@ body::-webkit-scrollbar {
 }
 
 /* Animated static/grain across the whole background — sits behind the content
-   and gives the liquid-glass surfaces something to refract. The layer is bigger
+   for texture. The layer is bigger
    than the viewport so the per-step jitter never reveals an edge. */
 body::before {
   content: '';
@@ -516,7 +516,7 @@ body.gesture-active .cursor {
   height: 16px;
 }
 
-/* Liquid-glass notch: frosted translucent bar with refraction + inset shine. */
+/* Notch: solid bar with a subtle inset shine. */
 .notch {
   pointer-events: auto;
   position: relative;
@@ -527,11 +527,9 @@ body.gesture-active .cursor {
   padding: 0 1rem;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
-  background: hsl(var(--foreground) / 0.06);
+  background: hsl(var(--background));
   border: 1px solid hsl(var(--foreground) / 0.08);
   border-top: none;
-  -webkit-backdrop-filter: blur(7px);
-  backdrop-filter: blur(7px) url(#glass-distortion);
   box-shadow:
     0 6px 16px rgba(0, 0, 0, 0.3),
     inset 1px 1px 1px 0 hsl(var(--foreground) / 0.12),
@@ -652,7 +650,7 @@ body.gesture-active .cursor {
   .notch__menu {
     display: inline-flex;
   }
-  /* Section links collapse into a glass dropdown below the notch. */
+  /* Section links collapse into a dropdown below the notch. */
   .notch__items {
     position: absolute;
     top: calc(100% + 10px);
@@ -665,10 +663,8 @@ body.gesture-active .cursor {
     min-width: 210px;
     padding: 0.5rem;
     border-radius: 16px;
-    background: hsl(var(--foreground) / 0.08);
+    background: hsl(var(--background));
     border: 1px solid hsl(var(--foreground) / 0.14);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px) url(#glass-distortion);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
   }
   .notch__items.is-open {
