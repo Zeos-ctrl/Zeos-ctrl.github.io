@@ -1,7 +1,9 @@
 import { projects } from '@/data/projects.js'
 import IndexList from '@/components/IndexList.jsx'
+import ScrambleList from '@/components/ScrambleList.jsx'
 
-export default function ProjectsSection() {
+// `compact`: the desktop floating page uses the chapter-style scramble rows.
+export default function ProjectsSection({ compact = false }) {
   const items = projects.map((project) => ({
     key: project.id,
     title: project.title,
@@ -18,7 +20,21 @@ export default function ProjectsSection() {
         Software I've designed, built, or contributed to.
       </p>
 
-      <IndexList items={items} />
+      {compact ? (
+        <ScrambleList
+          items={items.map(({ key, title, meta, year, href }) => ({
+            key,
+            href,
+            cells: [
+              { text: title, className: 'scramble-cell--title' },
+              { text: meta, className: 'scramble-cell--meta' },
+              { text: String(year), className: 'scramble-cell--meta scramble-cell--right' },
+            ],
+          }))}
+        />
+      ) : (
+        <IndexList items={items} />
+      )}
     </section>
   )
 }

@@ -155,6 +155,10 @@ body::before {
   position: relative;
   height: 220vh;
 }
+/* Desktop: longer pin — zoom in, then hold at full zoom (see ZOOM_DONE). */
+.hero-scroll--immersive {
+  height: 300vh;
+}
 /* The visual, pinned in place while you scroll through .hero-scroll. */
 .hero-sticky {
   position: sticky;
@@ -167,6 +171,123 @@ body::before {
 .hero-visual {
   position: absolute;
   inset: 0;
+}
+/* Desktop: section pages floating inside the anomaly (CSS3DRenderer layer).
+   The layer ignores the pointer; CSS3DObject re-enables it on each card.
+   Starts hidden — the scroll handler fades it in. */
+.hero-css3d {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+/* Don't add transforms here: CSS3DRenderer owns this element's transform.
+   Size is set inline to the viewport, so the card is the exact page. */
+.hero-card {
+  overflow: hidden;
+  border-radius: 28px;
+  background: hsl(var(--background));
+  box-shadow: 0 30px 80px hsl(0 0% 0% / 0.45);
+  /* Nothing on a floating card is selectable — only the open page is. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero-card *::selection {
+  background: transparent;
+}
+/* No focus outline from mouse clicks; keyboard focus still shows one. */
+.hero-card:focus:not(:focus-visible) {
+  outline: none;
+}
+/* The card holds the same .section-panel as the open page, look-only: the
+   whole card is the click target. Hidden behind the section name until
+   hover/keyboard focus, or while it's the card being zoomed into. */
+.hero-card > .section-panel {
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.hero-card__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: hsl(var(--foreground));
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.hero-card:hover > .section-panel,
+.hero-card:focus-visible > .section-panel,
+.hero-card > .section-panel[data-show="true"] {
+  opacity: 1;
+}
+.hero-card:hover > .hero-card__label,
+.hero-card:focus-visible > .hero-card__label,
+.hero-card > .section-panel[data-show="true"] ~ .hero-card__label {
+  opacity: 0;
+}
+/* Reading panel for the focused page: full-screen, taking over from the
+   card the camera just zoomed into (same markup, so the handoff matches).
+   Below the navbar (50) so the notch can still
+   switch sections. */
+.section-panel__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: hsl(var(--background));
+  animation: section-panel-in 0.25s ease-out;
+}
+.section-panel {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Same content width as the rest of the site (.container: 90vw). */
+  padding: 3rem calc(5% + 1.25rem);
+  outline: none;
+}
+.section-panel .section {
+  min-height: 0;
+  padding: 3rem 0;
+}
+/* No grey row borders around the links on the floating/open pages. */
+.section-panel .scramble-list,
+.section-panel .scramble-link {
+  border: 0;
+}
+.section-panel__close {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--foreground) / 0.25);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+@keyframes section-panel-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-panel__backdrop {
+    animation: none;
+  }
 }
 /* Anomaly palette toggle, floating in the hero corner. */
 .hero-palette {

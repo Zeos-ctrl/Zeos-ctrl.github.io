@@ -1,10 +1,34 @@
 // --- Component ---
 import React, { useRef, useEffect, useState, Suspense } from "react";
+import { createPortal } from "react-dom";
 import * as THREE from "three";
+import {
+  CSS3DRenderer,
+  CSS3DObject,
+} from "three/examples/jsm/renderers/CSS3DRenderer.js";
 import { useLenis } from "lenis/react";
 import { ANOMALY_PALETTES } from "./anomalyPalettes";
+import { SECTIONS } from "@/data/sections";
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Immersive (desktop) mode: where each section's page floats inside the
+// anomaly once the camera has zoomed in to z = ZOOM_END. [x, y, z, rotY].
+const ZOOM_END = 0.3;
+// Fraction of the hero scroll the zoom takes; the rest holds at full zoom so
+// there's room to look around before the footer arrives.
+const ZOOM_DONE = 0.65;
+const CARD_POSES = [
+  [-0.72, 0.42, -1.3, 0.28],
+  [0.78, 0.48, -1.6, -0.25],
+  [-0.66, -0.46, -1.5, 0.22],
+  [0.74, -0.4, -1.2, -0.2],
+];
+// Each card is laid out at the full viewport size (the exact page you get
+// when you open it), then scaled to CARD_W world units wide.
+const CARD_W = 1;
 
 // `progressRef` is a mutable ref holding 0→1 scroll progress. The scene reads
 // it every frame to drive the camera zoom, so scrolling never triggers a React
@@ -19,10 +43,27 @@ function resolveAnomalyColors(variant) {
   return ANOMALY_PALETTES[variant];
 }
 
-export function GenerativeArtScene({ progressRef, variant = "default" }) {
+// Immersive-mode extras (all optional): `cssMountRef` is the DOM layer the
+// floating pages render into, `focusRef` holds the focused section id (read
+// every frame), `onCards` receives the card elements so React can portal
+// previews into them, `onSelect(id)` fires on a card click and `onArrive()`
+// once the camera has finished flying to the focused card.
+export function GenerativeArtScene({
+  progressRef,
+  variant = "default",
+  immersive = false,
+  cssMountRef,
+  focusRef,
+  onCards,
+  onSelect,
+  onArrive,
+}) {
   const mountRef = useRef(null);
   const lightRef = useRef(null);
   const materialRef = useRef(null);
+  // Latest callbacks, so the long-lived scene effect never sees stale ones.
+  const cb = useRef({});
+  cb.current = { onCards, onSelect, onArrive };
 
   useEffect(() => {
     const currentMount = mountRef.current;
@@ -151,25 +192,133 @@ export function GenerativeArtScene({ progressRef, variant = "default" }) {
     lightRef.current = pointLight;
     scene.add(pointLight);
 
+    // Floating pages (immersive only): real DOM placed in 3D by a second
+    // renderer sharing the camera, layered above the WebGL canvas.
+    const cssScene = new THREE.Scene();
+    let cssRenderer = null;
+    const cards = [];
+    if (immersive && cssMountRef?.current) {
+      cssRenderer = new CSS3DRenderer();
+      cssRenderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+      cssMountRef.current.appendChild(cssRenderer.domElement);
+      const vw = currentMount.clientWidth;
+      const vh = currentMount.clientHeight;
+      SECTIONS.forEach((s, i) => {
+        const el = document.createElement("div");
+        el.className = "hero-card";
+        el.style.width = `${vw}px`;
+        el.style.height = `${vh}px`;
+        el.dataset.cursor = "hover";
+        el.setAttribute("role", "button");
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("aria-label", `Open ${s.label}`);
+        el.addEventListener("click", () => cb.current.onSelect?.(s.id));
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            cb.current.onSelect?.(s.id);
+          }
+        });
+        const obj = new CSS3DObject(el);
+        const [x, y, z, ry] = CARD_POSES[i];
+        obj.position.set(x, y, z);
+        obj.rotation.y = ry;
+        obj.scale.setScalar(CARD_W / vw);
+        cssScene.add(obj);
+        cards.push({ id: s.id, obj, baseY: y, baseRy: ry });
+      });
+      cb.current.onCards?.(cards.map((c) => c.obj.element));
+    }
+
+    // Don't burn GPU while the hero is scrolled out of view.
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
+    io.observe(currentMount);
+
+    const reduce = reducedMotion();
+    const target = new THREE.Vector3();
+    const targetQ = new THREE.Quaternion();
+    let bob = reduce ? 0 : 1; // card drift amount, settles to 0 while focused
+    let lastFocus = null;
+    let arrived = false;
+    let lastT = 0;
+
     let frameId;
     const animate = (t) => {
-      material.uniforms.time.value = t * 0.0003;
+      frameId = requestAnimationFrame(animate);
+      // Camera follow rate: 8% per 60fps frame, scaled so it's fps-independent.
+      const dt = Math.min(t - lastT, 100);
+      lastT = t;
+      const ease = reduce ? 1 : 1 - Math.pow(0.92, dt / 16.7);
+      const p = progressRef && progressRef.current ? progressRef.current : 0;
+      // Off-screen, or (non-immersive) already faded out: skip the frame.
+      if (!visible || (!immersive && p >= 0.7)) return;
+
+      const time = t * 0.0003;
+      material.uniforms.time.value = time;
       mesh.rotation.y += 0.0005;
       mesh.rotation.x += 0.0002;
-      // Scroll-driven zoom: pull the camera from z=3 toward and slightly past
-      // the mesh center (radius 1.2), so we end up "inside" the wireframe.
-      const p = progressRef && progressRef.current ? progressRef.current : 0;
-      const eased = p * p; // ease-in: accelerate as we approach
-      camera.position.z = 5 - eased * 3.4;
+
+      if (immersive) {
+        const focusId = focusRef?.current;
+        const focused = cards.find((c) => c.id === focusId);
+        if (focusId !== lastFocus) {
+          lastFocus = focusId;
+          arrived = false;
+        }
+        bob += ((focused || reduce ? 0 : 1) - bob) * Math.min(1, ease * 0.6);
+        cards.forEach((c, i) => {
+          c.obj.position.y = c.baseY + Math.sin(time * 2 + i * 1.7) * 0.04 * bob;
+          c.obj.rotation.y = c.baseRy + Math.sin(time * 1.3 + i) * 0.06 * bob;
+        });
+        if (focused) {
+          // Face the card square-on at the distance where it fills the
+          // viewport exactly — 1:1 pixels, matching the panel that takes over.
+          const halfTan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+          const dist = CARD_W / camera.aspect / (2 * halfTan);
+          targetQ.copy(focused.obj.quaternion);
+          target
+            .set(0, 0, dist)
+            .applyQuaternion(targetQ)
+            .add(focused.obj.position);
+        } else {
+          // Scroll-driven zoom from z=5 to inside the wireframe (radius 1.2).
+          const z = clamp01(p / ZOOM_DONE);
+          target.set(0, 0, 5 - z * z * (5 - ZOOM_END));
+          targetQ.identity();
+        }
+        camera.position.lerp(target, ease);
+        camera.quaternion.slerp(targetQ, ease);
+        if (focused && !arrived && camera.position.distanceTo(target) < 0.03) {
+          arrived = true;
+          cb.current.onArrive?.();
+        }
+      } else {
+        // Ease-in zoom that completes as the visual finishes fading (p=0.7).
+        const e = clamp01(p / 0.7);
+        camera.position.z = 5 - e * e * 3.4;
+      }
+
       renderer.render(scene, camera);
-      frameId = requestAnimationFrame(animate);
+      if (cssRenderer) cssRenderer.render(cssScene, camera);
     };
-    animate(0);
+    frameId = requestAnimationFrame(animate);
 
     const handleResize = () => {
       camera.aspect = currentMount.clientWidth / currentMount.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+      if (cssRenderer) {
+        const vw = currentMount.clientWidth;
+        const vh = currentMount.clientHeight;
+        cssRenderer.setSize(vw, vh);
+        // Keep each card the viewport's size and ratio.
+        cards.forEach((c) => {
+          c.obj.element.style.width = `${vw}px`;
+          c.obj.element.style.height = `${vh}px`;
+          c.obj.scale.setScalar(CARD_W / vw);
+        });
+      }
     };
 
     const handleMouseMove = (e) => {
@@ -191,11 +340,20 @@ export function GenerativeArtScene({ progressRef, variant = "default" }) {
 
     return () => {
       cancelAnimationFrame(frameId);
+      io.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       currentMount.removeChild(renderer.domElement);
+      // Free the GL context so repeat visits don't pile up contexts.
+      geometry.dispose();
+      material.dispose();
+      renderer.dispose();
+      if (cssRenderer) {
+        cssRenderer.domElement.remove();
+        cb.current.onCards?.([]);
+      }
     };
-  }, []);
+  }, [immersive]);
 
   // Swap the palette live when `variant` changes — no need to rebuild the scene.
   useEffect(() => {
@@ -219,21 +377,34 @@ export function GenerativeArtScene({ progressRef, variant = "default" }) {
   return <div ref={mountRef} className="absolute inset-0 w-full h-full z-0" />;
 }
 
+// `immersive` (desktop): zoom into the anomaly where the sections float as
+// pages. `focusId` is the section being read (driven by the URL hash in Home);
+// `onSelect(id)` / `onClose()` ask Home to change it.
 export function AnomalousMatterHero({
   title = "",
   subtitle = "",
   description = "",
+  immersive = false,
+  focusId = null,
+  onSelect,
+  onClose,
 }) {
   const progressRef = useRef(0);
   const scrollRef = useRef(null); // the tall wrapper that provides scroll room
   const textRef = useRef(null);
   const visualRef = useRef(null); // anomaly canvas + overlays, faded out on exit
+  const cssRef = useRef(null); // floating-pages layer (immersive)
+  const focusRef = useRef(focusId); // read by the Three.js loop
   const [variant, setVariant] = useState("default"); // anomaly palette
+  const [cardEls, setCardEls] = useState([]); // portal targets for previews
+  const [panelOpen, setPanelOpen] = useState(false);
+  const lenis = useLenis();
 
-  // Lenis fires this on every (smoothed) scroll frame. We compute 0→1 progress
-  // through the tall .hero-scroll wrapper while its sticky child stays pinned,
-  // and drive the effects imperatively — no React re-render per frame.
-  useLenis(() => {
+  // We compute 0→1 progress through the tall .hero-scroll wrapper while its
+  // sticky child stays pinned, and drive the effects imperatively — no React
+  // re-render per frame. Runs on every (smoothed) Lenis scroll frame, plus on
+  // mount/resize so a mid-page reload starts in the right state.
+  const update = () => {
     const el = scrollRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -245,22 +416,79 @@ export function AnomalousMatterHero({
     if (textRef.current) {
       textRef.current.style.opacity = String(clamp01(1 - p / 0.55));
     }
-    // Fade the whole anomaly visual out near the end, revealing the noisy
-    // background behind it so the transition into the next section keeps grain.
-    if (visualRef.current) {
+    if (immersive) {
+      // Stay inside the anomaly; the floating pages fade in as we arrive.
+      if (cssRef.current) {
+        const o = clamp01((p - 0.4) / (ZOOM_DONE - 0.4));
+        cssRef.current.style.opacity = String(o);
+        cssRef.current.style.visibility = o > 0 ? "visible" : "hidden";
+      }
+    } else if (visualRef.current) {
+      // Fade the whole anomaly visual out near the end, revealing the noisy
+      // background behind it so the transition into the next section keeps grain.
       visualRef.current.style.opacity = String(1 - clamp01((p - 0.45) / 0.25));
     }
-  });
+  };
+  useLenis(update);
+  useEffect(() => {
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [immersive]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Focusing a page: hold the page at the end of the zoom (Lenis stopped, so
+  // the wheel only scrolls the panel), and let the camera fly to the card.
+  // The panel opens once the scene reports arrival.
+  useEffect(() => {
+    focusRef.current = focusId;
+    setPanelOpen(false);
+    if (!immersive || !lenis) return;
+    if (!focusId) {
+      lenis.start();
+      return;
+    }
+    const el = scrollRef.current;
+    const end =
+      el.getBoundingClientRect().top +
+      window.scrollY +
+      el.offsetHeight -
+      window.innerHeight;
+    lenis.stop();
+    lenis.scrollTo(end, { force: true, immediate: reducedMotion() });
+    // Restart on unmount too (e.g. a link inside the panel navigates away).
+    return () => lenis.start();
+  }, [focusId, immersive, lenis]);
+
+  useEffect(() => {
+    if (!focusId) return;
+    const onKey = (e) => e.key === "Escape" && onClose?.();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focusId, onClose]);
+
+  const focused = SECTIONS.find((s) => s.id === focusId);
 
   return (
-    <div ref={scrollRef} className="hero-scroll">
+    <div
+      ref={scrollRef}
+      className={immersive ? "hero-scroll hero-scroll--immersive" : "hero-scroll"}
+    >
       <section
         role="banner"
         className="hero-sticky text-foreground"
       >
         <div ref={visualRef} className="hero-visual">
           <Suspense fallback={<div className="w-full h-full" />}>
-            <GenerativeArtScene progressRef={progressRef} variant={variant} />
+            <GenerativeArtScene
+              progressRef={progressRef}
+              variant={variant}
+              immersive={immersive}
+              cssMountRef={cssRef}
+              focusRef={focusRef}
+              onCards={setCardEls}
+              onSelect={onSelect}
+              onArrive={() => setPanelOpen(true)}
+            />
           </Suspense>
 
           {/* Palette toggle: switch the anomaly between its default color and the
@@ -290,9 +518,11 @@ export function AnomalousMatterHero({
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent z-10" />
         </div>
 
+        {immersive && <div ref={cssRef} className="hero-css3d" />}
+
         <div
           ref={textRef}
-          className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-20 md:pb-32 text-center"
+          className="absolute inset-0 z-20 flex flex-col items-center justify-end pb-20 md:pb-32 text-center pointer-events-none"
         >
           <div className="max-w-3xl px-4">
             <h1 className="text-sm font-mono tracking-widest text-primary/80 uppercase">
@@ -307,7 +537,60 @@ export function AnomalousMatterHero({
           </div>
         </div>
       </section>
+
+      {/* Floating cards: the section name, with the live page preview fading
+          in on hover (and staying on the focused card, so the zoom lands on
+          the exact page). The open section's preview is dropped so its ids
+          aren't duplicated by the panel. */}
+      {cardEls.map((el, i) => {
+        const { id, label, Component } = SECTIONS[i];
+        if (panelOpen && id === focusId) return null;
+        return createPortal(
+          <>
+            <div
+              className="section-panel"
+              data-show={id === focusId}
+              inert=""
+            >
+              <Component compact />
+            </div>
+            <div className="hero-card__label" aria-hidden="true">
+              {label}
+            </div>
+          </>,
+          el,
+          id
+        );
+      })}
+
+      {/* Full-screen reading panel: crisp, normal DOM (text inside CSS 3D transforms
+          blurs). Portaled to <body> so no ancestor can trap position:fixed. */}
+      {panelOpen &&
+        focused &&
+        createPortal(
+          <div className="section-panel__backdrop">
+            <div
+              className="section-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-label={focused.label}
+              data-lenis-prevent
+              tabIndex={-1}
+              ref={(n) => n && n.focus({ preventScroll: true })}
+            >
+              <button
+                type="button"
+                className="section-panel__close"
+                onClick={onClose}
+                aria-label="Close"
+              >
+                ×
+              </button>
+              <focused.Component compact />
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
-

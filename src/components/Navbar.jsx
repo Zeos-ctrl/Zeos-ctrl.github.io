@@ -5,13 +5,10 @@ import { useLenis } from 'lenis/react'
 import Logo from './Logo.jsx'
 import { useGesture } from './GestureContext.jsx'
 import { cn } from '@/lib/utils'
+import { SECTIONS, IMMERSIVE_QUERY } from '@/data/sections'
 
-const SECTIONS = [
-  { id: 'directive', label: 'Directive' },
-  { id: 'about', label: 'About' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'research', label: 'Research' },
-]
+// Desktop home: sections live as pages inside the hero, focused via #hash.
+const isImmersive = () => window.matchMedia(IMMERSIVE_QUERY).matches
 
 export default function Navbar() {
   const navigate = useNavigate()
@@ -73,7 +70,9 @@ export default function Navbar() {
   const goToSection = (e, id) => {
     e.preventDefault()
     setMenuOpen(false)
-    if (location.pathname === '/') {
+    if (isImmersive()) {
+      navigate(`/#${id}`)
+    } else if (location.pathname === '/') {
       const el = document.getElementById(id)
       if (el && lenis) lenis.scrollTo(el, { offset: -80 })
       else if (el) el.scrollIntoView({ behavior: 'smooth' })
@@ -84,10 +83,12 @@ export default function Navbar() {
 
   const goHome = (e) => {
     setMenuOpen(false)
-    // Already home → smooth-scroll to the top instead of a no-op navigation.
+    // Already home → smooth-scroll to the top instead of a no-op navigation
+    // (closing any open page first; `force` since Lenis is paused while open).
     if (location.pathname === '/') {
       e.preventDefault()
-      if (lenis) lenis.scrollTo(0)
+      if (location.hash) navigate('/')
+      if (lenis) lenis.scrollTo(0, { force: true })
       else window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
@@ -131,7 +132,10 @@ export default function Navbar() {
         <LayoutGroup>
           <div className={cn('notch__items', menuOpen && 'is-open')}>
             {SECTIONS.map((s) => {
-              const active = activeId === s.id
+              const active =
+                location.pathname === '/' && isImmersive()
+                  ? location.hash === `#${s.id}`
+                  : activeId === s.id
               return (
                 <a
                   key={s.id}

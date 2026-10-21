@@ -40,8 +40,12 @@ export default function PageTransition({
   }
 
   useEffect(() => {
-    // Same page (e.g. a hash change) — nothing to animate.
-    if (location.pathname === displayLocation.pathname) return
+    // Same page (e.g. a hash change) — nothing to animate, but pass the new
+    // location through so the page sees the hash.
+    if (location.pathname === displayLocation.pathname) {
+      setDisplayLocation(location)
+      return
+    }
 
     // Respect reduced-motion: swap instantly, no wipe.
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
